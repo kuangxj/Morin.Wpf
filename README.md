@@ -22,10 +22,10 @@ https://github.com/kuangxj/Morin.Wpf
 
 ## 项目依赖
 1. 项目基于.NET 9开发，需要.NET 9运行环境。
-2. 依赖Flyleaflib，地址：[项目中已包含依赖文件](https://github.com/SuRGeoNix/Flyleaf)。
-3. 依赖MaterialDesignThemes，地址：[项目中已包含依赖文件](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit)。
-4. 依赖Stylet，地址：[项目中已包含依赖文件](https://github.com/canton7/Stylet）。
-5. 依赖AutoMapper，地址：[项目中已包含依赖文件](https://github.com/AutoMapper/AutoMapper）。
+2. 依赖Flyleaflib，地址：https://github.com/SuRGeoNix/Flyleaf。
+3. 依赖MaterialDesignThemes，地址：https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit。
+4. 依赖Stylet，地址：https://github.com/canton7/Stylet。
+5. 依赖AutoMapper，地址：https://github.com/AutoMapper/AutoMapper。
 6. 依赖FFMPEG，项目中已包含依赖文件。
 
 ## 项目运行
