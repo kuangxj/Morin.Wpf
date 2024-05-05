@@ -1,0 +1,318 @@
+﻿<Window
+    x:Class="Morin.Wpf.Views.Players.PlayerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Morin.Wpf.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fl="clr-namespace:FlyleafLib.Controls.WPF;assembly=FlyleafLib"
+    xmlns:flwpf="clr-namespace:FlyleafLib.Controls.WPF;assembly=FlyleafLib.Controls.WPF"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:Morin.Wpf"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:players="clr-namespace:Morin.Wpf.ViewModels.Players"
+    xmlns:s="https://github.com/canton7/Stylet"
+    Title="Morin"
+    MinWidth="150"
+    MinHeight="80"
+    d:DataContext="{d:DesignInstance Type=players:PlayerViewModel}"
+    FontFamily="{materialDesign:MaterialDesignFont}"
+    Icon="/Resources/Images/Movie.ico"
+    ResizeMode="CanResizeWithGrip"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Medium"
+    TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Foreground}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    WindowStartupLocation="CenterScreen"
+    WindowState="{Binding Path=WindowState}"
+    mc:Ignorable="d">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
+    </WindowChrome.WindowChrome>
+    <i:Interaction.Behaviors>
+        <behaviors:WindowBehavior Close="{Binding Path=ToClose}" />
+    </i:Interaction.Behaviors>
+    <Border BorderThickness="0.6" CornerRadius="5">
+        <Border.Resources>
+            <ResourceDictionary>
+                <Storyboard x:Key="fadeIn" Timeline.DesiredFrameRate="10">
+                    <DoubleAnimation
+                        AutoReverse="False"
+                        BeginTime="0:0:0"
+                        Storyboard.TargetProperty="Opacity"
+                        To="1"
+                        Duration="0:0:0.5" />
+                </Storyboard>
+
+                <Storyboard x:Key="fadeOut" Timeline.DesiredFrameRate="10">
+                    <DoubleAnimation
+                        AutoReverse="False"
+                        BeginTime="0:0:0"
+                        Storyboard.TargetProperty="Opacity"
+                        To="0"
+                        Duration="0:0:2.0" />
+                </Storyboard>
+            </ResourceDictionary>
+        </Border.Resources>
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="BorderBrush" Value="#01000000" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                    </Trigger>
+                    <DataTrigger Binding="{Binding Player.Host.Surface.IsMouseOver}" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Player.Host.IsFullScreen}" Value="True">
+                        <Setter Property="BorderBrush" Value="#01000000" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Player.Activity.Mode}" Value="Active">
+                        <Setter Property="BorderBrush" Value="#01000000" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Player.Activity.Mode}" Value="Idle">
+                        <Setter Property="BorderBrush" Value="#01000000" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Player.Host.IsResizing}" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <Border BorderBrush="#01000000" BorderThickness="2" CornerRadius="5">
+
+            <fl:FlyleafHost
+                x:Name="Host"
+                Background="Transparent"
+                CornerRadius="5"
+                KeyBindings="Surface"
+                Player="{Binding Path=Player}">
+                <Grid
+                    x:Name="GridController"
+                    Background="Transparent"
+                    DataContext="{Binding HostDataContext}"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <!--  信息提示  -->
+                    <materialDesign:Snackbar MessageQueue="{Binding Path=MessageQueue}" />
+
+                    <!--  控制菜单  -->
+                    <materialDesign:Card
+                        Margin="-2,2"
+                        VerticalAlignment="Bottom"
+                        Focusable="False"
+                        FontFamily="{materialDesign:MaterialDesignFont}"
+                        TextElement.FontSize="13"
+                        TextElement.FontWeight="Medium"
+                        TextElement.Foreground="White">
+                        <materialDesign:Card.Background>
+                            <SolidColorBrush Opacity="0.15" Color="{Binding Player.Config.Video.BackgroundColor}" />
+                        </materialDesign:Card.Background>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <!--  第一行  进度条  -->
+                            <Grid Margin="8,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--  Current Time | Slider | Duration  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Foreground="{StaticResource MaterialDesign.Brush.Primary}"
+                                    Text="{Binding Player.CurTime, Converter={StaticResource TicksToTime}}" />
+
+                                <Slider
+                                    Grid.Column="1"
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    Focusable="False"
+                                    IsSelectionRangeEnabled="True"
+                                    Maximum="{Binding Player.Duration, Converter={StaticResource TicksToSeconds}}"
+                                    SelectionStart="{Binding RelativeSource={RelativeSource Self}, Path=Value, Mode=OneWay}"
+                                    Style="{DynamicResource FlyleafSlider}"
+                                    Value="{Binding Player.CurTime, Mode=TwoWay, Converter={StaticResource TicksToSeconds}}">
+                                    <Slider.SelectionEnd>
+                                        <MultiBinding Converter="{StaticResource SumConverter}">
+                                            <Binding Mode="OneWay" Path="SelectionStart" RelativeSource="{RelativeSource Self}" />
+                                            <Binding Converter="{StaticResource TicksToSeconds}" Mode="OneWay" Path="Player.BufferedDuration" />
+                                        </MultiBinding>
+                                    </Slider.SelectionEnd>
+                                </Slider>
+
+                                <TextBlock
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Foreground="{StaticResource MaterialDesign.Brush.Primary}"
+                                    Text="{Binding Player.Duration, Converter={StaticResource TicksToTime}}" />
+                            </Grid>
+
+                            <!--  上一集|开始或暂停|下一集  -->
+                            <StackPanel
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <!--  上一集  -->
+                                <Button Command="{s:Action NavigateBefore}" Content="{materialDesign:PackIcon Kind=ChevronDoubleLeft}" Style="{StaticResource MaterialDesignFlatButton}" />
+                                <!--  开始|暂停  -->
+                                <ToggleButton
+                                    Margin="10,0"
+                                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=Pause}"
+                                    Command="{Binding Player.Commands.TogglePlayPause}"
+                                    Content="{materialDesign:PackIcon Kind=Play}"
+                                    IsChecked="{Binding Path=IsPlay}"
+                                    Style="{StaticResource MaterialDesignActionToggleButton}" />
+                                <!--  下一集  -->
+                                <Button Command="{s:Action NavigateNext}" Content="{materialDesign:PackIcon Kind=ChevronDoubleRight}" Style="{StaticResource MaterialDesignFlatButton}" />
+                            </StackPanel>
+
+                            <!--  第二行  声音、最大化  -->
+                            <StackPanel
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <ToggleButton
+                                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=Mute}"
+                                    Background="Transparent"
+                                    Command="{Binding Player.Commands.ToggleMute}"
+                                    Content="{materialDesign:PackIcon Kind=VolumeHigh}"
+                                    Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                    Style="{StaticResource MaterialDesignActionToggleButton}" />
+                                <Slider
+                                    Width="100"
+                                    VerticalAlignment="Center"
+                                    Maximum="{Binding Player.Config.Player.VolumeMax}"
+                                    Style="{StaticResource FlyleafSlider}"
+                                    Value="{Binding Player.Audio.Volume}" />
+                                <!--  最大化  -->
+                                <ToggleButton
+                                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=FullscreenExit,
+                                                                                                          Size=28}"
+                                    Background="Transparent"
+                                    Content="{materialDesign:PackIcon Kind=Fullscreen,
+                                                                      Size=28}"
+                                    Focusable="False"
+                                    Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                    IsChecked="{Binding Player.Host.IsFullScreen}"
+                                    Style="{StaticResource MaterialDesignActionToggleButton}" />
+
+                                <!--  列表  -->
+                                <ToggleButton
+                                    VerticalAlignment="Center"
+                                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=PlaylistStar,
+                                                                                                          Size=28}"
+                                    Background="Transparent"
+                                    Checked="{s:Action ExpendAll}"
+                                    Content="{materialDesign:PackIcon Kind=PlaylistFavorite,
+                                                                      Size=28}"
+                                    Focusable="False"
+                                    Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                    Style="{StaticResource MaterialDesignActionToggleButton}"
+                                    Unchecked="{s:Action ExpendAll}" />
+                            </StackPanel>
+
+                        </Grid>
+                    </materialDesign:Card>
+
+                    <!--  关闭、最大化区域  -->
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+                        <StackPanel.Background>
+                            <SolidColorBrush Opacity="0.35" Color="{Binding Player.Config.Video.BackgroundColor}" />
+                        </StackPanel.Background>
+                        <!--  跳转设置  -->
+                        <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="True">
+                            <materialDesign:PopupBox.ToggleContent>
+                                <materialDesign:PackIcon
+                                    Width="22"
+                                    Height="22"
+                                    Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                    Kind="SettingsOutline" />
+                            </materialDesign:PopupBox.ToggleContent>
+                            <materialDesign:PopupBox.ToggleCheckedContent>
+                                <materialDesign:PackIcon
+                                    Width="22"
+                                    Height="22"
+                                    Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                    Kind="ShopSettingsOutline" />
+                            </materialDesign:PopupBox.ToggleCheckedContent>
+                            <Grid Margin="10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="开头" />
+                                    <TextBox
+                                        Width="30"
+                                        Margin="5,0"
+                                        VerticalAlignment="Center"
+                                        IsEnabled="{Binding Path=SkipTimeSwitch}"
+                                        Text="{Binding Path=SkipBeginPosition}" />
+                                    <TextBlock VerticalAlignment="Center" Text="秒" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="20,0" Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="结尾" />
+                                    <TextBox
+                                        Width="30"
+                                        Margin="5,0"
+                                        VerticalAlignment="Center"
+                                        IsEnabled="{Binding Path=SkipTimeSwitch}"
+                                        Text="{Binding Path=SkipEndPosition}" />
+                                    <TextBlock VerticalAlignment="Center" Text="秒" />
+                                </StackPanel>
+                                <CheckBox
+                                    x:Name="ToggleButtonSkipTime"
+                                    Grid.Column="2"
+                                    Content="开关"
+                                    IsChecked="{Binding Path=SkipTimeSwitch}" />
+                            </Grid>
+                        </materialDesign:PopupBox>
+                        <!--  关闭  -->
+                        <Button
+                            Background="Transparent"
+                            Command="{s:Action WindowMinimize}"
+                            Content="{materialDesign:PackIcon Kind=WindowMinimize}"
+                            Focusable="False"
+                            Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                            Style="{StaticResource MaterialDesignFlatButton}" />
+                        <!--  最大化  -->
+                        <ToggleButton
+                            materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=FullscreenExit}"
+                            Background="Transparent"
+                            Content="{materialDesign:PackIcon Kind=Fullscreen}"
+                            Focusable="False"
+                            Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                            IsChecked="{Binding Player.Host.IsFullScreen}"
+                            Style="{StaticResource MaterialDesignActionToggleButton}" />
+                        <!--  关闭  -->
+                        <Button
+                            Background="Transparent"
+                            Command="{s:Action WindowClose}"
+                            Content="{materialDesign:PackIcon Kind=WindowClose}"
+                            Focusable="False"
+                            Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                            Style="{StaticResource MaterialDesignFlatButton}" />
+                    </StackPanel>
+
+                    <!--  播放列表  -->
+                    <ContentControl Grid.Column="1" Width="{Binding Path=PlayerListWidth}" s:View.Model="{Binding Path=PlayerListView}" />
+
+                </Grid>
+            </fl:FlyleafHost>
+        </Border>
+    </Border>
+</Window>

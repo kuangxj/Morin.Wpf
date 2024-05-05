@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="Morin.Wpf.Views.Settings.AboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Morin.Wpf.Views.Settings"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settings="clr-namespace:Morin.Wpf.ViewModels.Settings"
+    d:DataContext="{d:DesignInstance Type=settings:AboutViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
+    <TabControl TabStripPlacement="Top">
+        <TabControl.Resources>
+            <Style TargetType="{x:Type TabPanel}">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+        </TabControl.Resources>
+        <TabItem Header="关于">
+            <TextBlock Margin="10" Style="{StaticResource MaterialDesignTitleMediumTextBlock}" TextWrapping="Wrap">
+                <Run Text="魔影（Morin），是一款依托MIT协议，基于WPF开发的影视、电视观影平台，其数据来自用户配置的数据源。" />
+                <LineBreak />
+                <Run Text="至于Android和iOS平台的版本，由用户需求量来决定是否需要开发！" />
+                <LineBreak />
+                <Run Text="在观影过程中遇到的问题，可留言平台或联系开发者，邮箱【kuangxj#qq.com】。" />
+            </TextBlock>
+        </TabItem>
+        <TabItem Header="依赖">
+            <WrapPanel Margin="10" Orientation="Horizontal">
+
+                <TextBlock Style="{StaticResource MaterialDesignTitleMediumTextBlock}">
+                    <Hyperlink NavigateUri="https://github.com/SuRGeoNix/Flyleaf" Style="{StaticResource MaterialDesignSubtitle1Hyperlink}">
+                        <Run Text="FlyleafLib" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="10,0" Style="{StaticResource MaterialDesignTitleMediumTextBlock}">
+                    <Hyperlink NavigateUri="https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit" Style="{StaticResource MaterialDesignSubtitle1Hyperlink}">
+                        <Run Text="MaterialDesignThemes" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="10,0" Style="{StaticResource MaterialDesignTitleMediumTextBlock}">
+                    <Hyperlink NavigateUri="https://github.com/canton7/Stylet" Style="{StaticResource MaterialDesignSubtitle1Hyperlink}">
+                        <Run Text="Stylet" />
+                    </Hyperlink>
+                </TextBlock>
+            </WrapPanel>
+        </TabItem>
+        <TabItem Header="MIT协议">
+            <RichTextBox Margin="10">
+                <FlowDocument>
+                    <Paragraph>
+                        <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignTitleLargeTextBlock}" Text="MIT License" />
+                        <TextBlock Style="{StaticResource MaterialDesignTitleMediumTextBlock}" TextWrapping="Wrap">
+                            <Run Text="根据以下条款，被授权人获得免费的获得和使用本软件及其相关文档文件（以下简称“软件”）的许可。被授权人有权处理软件的副本，包括但不限于使用、复制、修改、合并、发布、分发、再授权和销售软件及其副本的权利，以及授予他人同等的权利，但前提是：  上述版权声明和本许可声明应包含在软件的所有副本或主要部分中。  本软件按“原样”提供，不附带任何形式的明示或暗示担保，包括但不限于适销性、特定用途适用性和非侵权性的担保。在任何情况下，作者或版权所有者不承担任何索赔、损害或其他责任，无论是合同诉讼、侵权行为还是其他行为，由于、在或与本软件有关或由本软件引起，无论是因使用或其他方式产生的，即使在有关软件的可能性已经通知。 " />
+                        </TextBlock>
+                        <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignTitleLargeTextBlock}" Text="MIT License" />
+                        <TextBlock Style="{StaticResource MaterialDesignTitleMediumTextBlock}" TextWrapping="Wrap">
+                            <Run Text="MIT License  Copyright (c) 2024 kuangxj  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE." />
+                        </TextBlock>
+
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+
+        </TabItem>
+    </TabControl>
+</UserControl>

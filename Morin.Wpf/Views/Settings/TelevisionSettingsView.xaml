@@ -1,0 +1,291 @@
+﻿<UserControl
+    x:Class="Morin.Wpf.Views.Settings.TelevisionSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Morin.Wpf.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Morin.Wpf.Views.Settings"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:settings="clr-namespace:Morin.Wpf.ViewModels.Settings"
+    d:DataContext="{d:DesignInstance Type=settings:TelevisionSettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Medium"
+    TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Foreground}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <!--  分组频道  -->
+        <materialDesign:DialogHost DialogClosing="{s:Action TVSourceOnDialogClosing}" DialogTheme="Inherit">
+            <materialDesign:DialogHost.DialogContent>
+                <GroupBox MinWidth="200" Header="添加分组频道信息">
+                    <StackPanel Margin="16">
+                        <TextBlock Text="电视频道分组信息" />
+                        <TextBox Margin="0,8,0,0" Focusable="True" Text="{Binding Path=TVSourceGroupTitle}" />
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button
+                                Margin="0,8,8,0"
+                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                Content="接受"
+                                IsDefault="True"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.CommandParameter>
+                                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                        True
+                                    </system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button
+                                Margin="0,8,8,0"
+                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                Content="取消"
+                                IsCancel="True"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.CommandParameter>
+                                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                        False
+                                    </system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </GroupBox>
+            </materialDesign:DialogHost.DialogContent>
+            <Border
+                MinWidth="200"
+                Padding="1"
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                BorderThickness="1,1,0,1"
+                ClipToBounds="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <materialDesign:ColorZone Margin="1" Panel.ZIndex="1" CornerRadius="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="1" Command="{s:Action Search}" Style="{StaticResource MaterialDesignToolButton}">
+                                <materialDesign:PackIcon Kind="Search" Opacity=".56" />
+                            </Button>
+                            <TextBox
+                                MinWidth="100"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                materialDesign:HintAssist.Hint="电视频道名称"
+                                materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                BorderThickness="0"
+                                Text="{Binding Path=SearchContent}" />
+
+                        </Grid>
+                    </materialDesign:ColorZone>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Path=TVCollectionView}" SelectedItem="{Binding Path=TVSourceItem}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Path=GroupTitle}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        Command="{s:Action TVSourceRemove}"
+                                        CommandParameter="{Binding Path=.}"
+                                        Content="{materialDesign:PackIcon Kind=Remove}"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        ToolTip="移除" />
+                                </Grid>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <materialDesign:ColorZone Grid.Row="2" Effect="{DynamicResource MaterialDesignShadowDepth5}" Mode="PrimaryMid">
+                        <TextBlock Margin="16" Text="电视频道列表" />
+                    </materialDesign:ColorZone>
+                    <Button
+                        Grid.RowSpan="2"
+                        Margin="0,0,28,-20"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                        Content="{materialDesign:PackIcon Kind=Plus,
+                                                          Size=22}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" />
+                </Grid>
+            </Border>
+        </materialDesign:DialogHost>
+        <!--  电视频道、运营商与地址  -->
+        <materialDesign:DialogHost Grid.Column="1" DialogClosing="{s:Action TVSourceDetailOnDialogClosing}" DialogTheme="Inherit">
+            <materialDesign:DialogHost.DialogContent>
+                <GroupBox MinWidth="600" Header="添加运营商与地址">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <StackPanel Margin="5,0" Orientation="Horizontal">
+                            <TextBlock Width="100" VerticalAlignment="Center" Text="频道名称 " />
+                            <TextBox
+                                Width="200"
+                                Margin="5,0"
+                                VerticalAlignment="Bottom"
+                                materialDesign:HintAssist.Hint="频道名称"
+                                materialDesign:HintAssist.HintOpacity=".5"
+                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                Text="{Binding Path=TVSourceDetailTitle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Margin="5,10" Orientation="Horizontal">
+                            <TextBlock
+                                Width="100"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="运营商 " />
+                            <ComboBox Margin="5,0" ItemsSource="{Binding Path=DataContext.NetworkCarrierTypes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" SelectedItem="{Binding Path=DataContext.NetworkCarrierType, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Margin="5,0" Orientation="Horizontal">
+                            <TextBlock
+                                Width="100"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="地址 " />
+                            <TextBox
+                                MinWidth="600"
+                                Margin="5,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                materialDesign:HintAssist.Hint="频道地址"
+                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                Text="{Binding Path=WebAddr}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Row="3"
+                            Margin="5,10"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                Margin="0,8,8,0"
+                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                Content="接受"
+                                IsDefault="True"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.CommandParameter>
+                                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                        True
+                                    </system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button
+                                Margin="0,8,8,0"
+                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                Content="取消"
+                                IsCancel="True"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.CommandParameter>
+                                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
+                                        False
+                                    </system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </materialDesign:DialogHost.DialogContent>
+            <Border
+                MinHeight="256"
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                BorderThickness="1"
+                ClipToBounds="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ListBox VerticalAlignment="Top" ItemsSource="{Binding Path=TVSourceDetails}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="10,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding Path=NetworkCarrierType, Converter={StaticResource EnumDescriptionConverter}}" />
+                                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Path=WebAddr}" />
+
+
+                                    <Button
+                                        Grid.Column="3"
+                                        HorizontalAlignment="Right"
+                                        Command="{s:Action TVSourceDetailsRemove}"
+                                        CommandParameter="{Binding Path=.}"
+                                        Content="移除"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        ToolTip="移除" />
+
+
+                                </Grid>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <materialDesign:ColorZone Grid.Row="1" Effect="{DynamicResource MaterialDesignShadowDepth5}" Mode="PrimaryMid">
+                        <TextBlock Margin="16" Text="运营商信息" />
+                    </materialDesign:ColorZone>
+                    <Button
+                        Grid.Row="0"
+                        Margin="0,0,28,-20"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                        Content="{materialDesign:PackIcon Kind=Plus,
+                                                          Size=22}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" />
+                </Grid>
+            </Border>
+        </materialDesign:DialogHost>
+    </Grid>
+
+</UserControl>
