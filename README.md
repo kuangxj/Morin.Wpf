@@ -5,8 +5,8 @@
 魔影（Morin），一款基于WPF开发的在线观看视频、电视平台，目前仅对Windows支持。后续开放Android、iOS平台。
 
 ## 项目截图
-![输入图片说明](https://github.com/kuangxj/Morin.Wpf/blob/main/Morin.Wpf/Resources/Images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240505234357.png"屏幕截图.png")
-![输入图片说明](https://github.com/kuangxj/Morin.Wpf/blob/main/Morin.Wpf/Resources/Images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240505234438.png"屏幕截图.png")
+![输入图片说明](Morin.Wpf/Resources/Images/微信图片_20240505234357.png"屏幕截图.png")
+![输入图片说明](https://github.com/kuangxj/Morin.Wpf/blob/main/Morin.Wpf/Resources/Images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240505234438.png?raw=true"屏幕截图.png")
 ![输入图片说明](https://github.com/kuangxj/Morin.Wpf/blob/main/Morin.Wpf/Resources/Images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240505234501.png"屏幕截图.png")
 ![输入图片说明](https://github.com/kuangxj/Morin.Wpf/blob/main/Morin.Wpf/Resources/Images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240505234531.png"屏幕截图.png")
 ## 项目地址
@@ -22,7 +22,7 @@ https://github.com/kuangxj/Morin.Wpf
 
 ## 项目依赖
 1. 项目基于.NET 9开发，需要.NET 9运行环境。
-2. 依赖Flyleaflib，地址：[项目中已包含依赖文件]https://github.com/SuRGeoNix/Flyleaf。
+2. 依赖Flyleaflib，地址：[项目中已包含依赖文件](https://github.com/SuRGeoNix/Flyleaf)。
 3. 依赖MaterialDesignThemes，地址：[项目中已包含依赖文件](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit)。
 4. 依赖Stylet，地址：[项目中已包含依赖文件](https://github.com/canton7/Stylet）。
 5. 依赖AutoMapper，地址：[项目中已包含依赖文件](https://github.com/AutoMapper/AutoMapper）。
