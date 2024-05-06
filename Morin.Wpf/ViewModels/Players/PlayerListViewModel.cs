@@ -83,7 +83,10 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
             else
             {
                 PlayList = PlayDict[value];
-                VideoItem = PlayList.FirstOrDefault();
+                if (PlayList.Count > 0)
+                {
+                    VideoItem = PlayList[0];
+                }
             }
         }
     }
@@ -92,7 +95,11 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
         if (!historyViews.Any()) return videos.First();
 
         var lastViewModel = historyViews.MaxBy(x => x.ViewTime);
-        return videos.FirstOrDefault(x => x.SourceID == lastViewModel.SourceID && x.VodId == x.VodId && x.Episode.Equals(lastViewModel.Episode)) ?? videos.First();
+        if (lastViewModel != null)
+        {
+            return videos.FirstOrDefault(x => x.SourceID == lastViewModel.SourceID && x.VodId == x.VodId && x.Episode != null && x.Episode.Equals(lastViewModel.Episode)) ?? videos.First();
+        }
+        return new();
     }
 
     public List<string> Lines { get; set; }
@@ -209,11 +216,7 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
                     index = 0;
                 }
             }
-            //  重复的操作
-            if (VideoItem == PlayList[index])
-            {
-                VideoItem = PlayList[index];
-            }
+            VideoItem = PlayList[index];
         }
     }
 }
