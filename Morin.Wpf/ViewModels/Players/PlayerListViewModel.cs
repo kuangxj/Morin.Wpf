@@ -209,7 +209,11 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
                     index = 0;
                 }
             }
-            VideoItem = PlayList[index];
+            //  重复的操作
+            if (VideoItem == PlayList[index])
+            {
+                VideoItem = PlayList[index];
+            }
         }
     }
 }

@@ -73,7 +73,6 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             SkipTimeUpdate();
         }
     }
-
     private VideoModel curVideo;
 
     public PlayerListViewModel? PlayerListView { get; set; }
@@ -171,12 +170,6 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         {
             if (sender is Player player)
             {
-                //  向任务栏推送播放进度
-                if (player.Duration != 0)
-                {
-                    double progressRate = player.CurTime / player.Duration;
-                    eventAggregator.Publish(new MediaPositionPercentChangedMessage { Position = Math.Round(progressRate, 2) });
-                }
                 //  跳转开关：开的情况
                 if (SkipTimeSwitch)
                 {
@@ -190,10 +183,18 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     private Config DefaultConfig()
     {
         var config = new Config();
-        config.Demuxer.FormatOptToUnderlying = true;     // Mainly for HLS to pass the original query which might includes session keys       
-        config.Audio.FiltersEnabled = true;     // To allow embedded atempo filter for speed
-        config.Video.GPUAdapter = "";       // Set it empty so it will include it when we save it
-        config.Subtitles.SearchLocal = true;
+
+        // Mainly for HLS to pass the original query which might includes session keys       
+        config.Demuxer.FormatOptToUnderlying = true;
+        //  加大缓存进度
+        config.Demuxer.BufferDuration = 300 *(long)1000 * 10000;
+        // To allow embedded atempo filter for speed
+        config.Audio.FiltersEnabled = true;
+
+        // Set it empty so it will include it when we save it
+        config.Video.GPUAdapter = "";       
+
+        config.Subtitles.SearchLocal = true;  
         return config;
     }
 

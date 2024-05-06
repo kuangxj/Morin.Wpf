@@ -22,8 +22,7 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
     IAppService appService, IEventAggregator eventAggregator)
     : Conductor<Screen>.Collection.OneActive,
     IHandle<WindowStateChangedMessage>,
-    IHandle<ScreenChangedMessage>,
-    IHandle<MediaPositionPercentChangedMessage>
+    IHandle<ScreenChangedMessage>
 {
     private readonly IConfiguration configuration = configuration;
     private readonly IContainer container = container;
@@ -115,7 +114,7 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
         //  菜单设置
         var menus = CreateMenuBars();
         appService.MenusSave(menus);
-        //  加载Pid=0的根数据，-1为不显示
+        //  加载菜单
         Menus = [.. menus.Where(x => x.Pid == 0&&x.Visvisibility==true)];
         MenuItem = Menus.First(x => x.Selected == true);
 
@@ -192,19 +191,6 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
     public void Handle(WindowStateChangedMessage message)
     {
         WindowState = message.IsFullScreen ? WindowState.Maximized : WindowState.Normal;
-    }
-
-    /// <summary>
-    /// 在任务栏显示播放进度（百分比）
-    /// </summary>
-    /// <param name="message"></param>
-    public void Handle(MediaPositionPercentChangedMessage message)
-    {
-        PlaybackProgress = message.Position;
-        if (PlaybackProgress == 1)
-        {
-            PlaybackProgressState = TaskbarItemProgressState.None;
-        }
     }
 
     public void VideoSearch(string keyWord)

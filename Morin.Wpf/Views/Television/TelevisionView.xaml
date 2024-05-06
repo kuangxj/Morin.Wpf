@@ -114,11 +114,16 @@
                                     MaxWidth="200"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    Background="Transparent"
                                     Effect="{StaticResource TitleBorderEffect}"
                                     FontWeight="ExtraBold"
                                     Foreground="White"
                                     Style="{StaticResource MaterialDesignTitleLargeTextBlock}"
-                                    Text="{Binding Path=Title}" />
+                                    Text="{Binding Path=Title}">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding Command="{s:Action Play}" CommandParameter="{Binding Path=.}" MouseAction="LeftClick" />
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
 
                             </Grid>
                             <Border.Style>
