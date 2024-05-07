@@ -147,7 +147,7 @@
                                     VerticalAlignment="Center"
                                     Foreground="{DynamicResource MaterialDesignBody}">
                                     <Run Text="来源：【" />
-                                    <Run Text="{Binding Path=SourceTitle}" />
+                                    <Run Text="{Binding Path=VodSourceTitle}" />
                                     <Run Text="】" />
                                 </TextBlock>
                             </StackPanel>

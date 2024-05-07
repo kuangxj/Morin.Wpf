@@ -30,23 +30,8 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     private readonly IMapper mapper = mapper;
     private readonly ISnackbarMessageQueue snackbarMessageQueue = snackbarMessageQueue;
     public WindowState WindowState { get; set; }
-    public bool IsPlay { get; set; }
-    private bool _isFavorite;
-    public bool IsFavorite
-    {
-        get => _isFavorite; set
-        {
-            _isFavorite = value;
-            if (value)
-            {
-                FavoriteAddOrUpdate(curVideo);
-            }
-            else
-            {
-                FavoriteRemove(curVideo);
-            }
-        }
-    }
+    public bool IsPlay { get; set; }  
+    public bool IsFavorite { get; set; }
     private VideoSettingsConfig videoSettings;
     private List<PlaySkipTimeModel> playSkipTimes;
     public Dictionary<string, IEnumerable<VideoModel>> PlayDict { get; set; }
@@ -364,5 +349,16 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     {
         var favoriteModel = mapper.Map<FavoriteModel>(model);
         appService.FavoriteTryRemove(favoriteModel.Key);
+    }
+
+    public void FavoriteCheckd(object sender, RoutedEventArgs e)
+    {
+        IsFavorite = true;
+        FavoriteAddOrUpdate(curVideo);
+    }
+    public void FavoriteUnchecked(object sender, RoutedEventArgs e)
+    {
+        IsFavorite = false;
+        FavoriteRemove(curVideo);
     }
 }

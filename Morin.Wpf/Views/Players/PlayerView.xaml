@@ -237,11 +237,13 @@
                             Margin="10,0"
                             materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=Heart}"
                             Background="Transparent"
+                            Checked="{s:Action FavoriteCheckd}"
                             Content="{materialDesign:PackIcon Kind=HeartOutline}"
                             Focusable="False"
                             Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
-                            IsChecked="{Binding IsFavorite}"
-                            Style="{StaticResource MaterialDesignActionToggleButton}" />
+                            IsChecked="{Binding Path=IsFavorite}"
+                            Style="{StaticResource MaterialDesignActionToggleButton}"
+                            Unchecked="{s:Action FavoriteUnchecked}" />
                         <!--  跳转设置  -->
                         <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="True">
                             <materialDesign:PopupBox.ToggleContent>
