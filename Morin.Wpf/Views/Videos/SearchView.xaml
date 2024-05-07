@@ -120,7 +120,7 @@
                                 </Border.Style>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="PreviewMouseDown">
-                                        <i:InvokeCommandAction Command="{s:Action Play}" CommandParameter="{Binding Path=.}" />
+                                        <i:InvokeCommandAction Command="{s:Action PlayAsync}" CommandParameter="{Binding Path=.}" />
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Border>

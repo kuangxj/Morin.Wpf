@@ -12,7 +12,7 @@ using System.Windows.Forms.Design;
 
 namespace Morin.Wpf.ViewModels.Account;
 
-internal class FavoriteViewModel(IContainer container, 
+internal class FavoriteViewModel(IContainer container,
     ISourceProtocolAdapter sourceProtocolAdapter,
     IMapper mapper,
     IApiService apiService, IAppService appService, IWindowManager windowManager) : Screen
@@ -61,17 +61,23 @@ internal class FavoriteViewModel(IContainer container,
         }
         PageIndexChangedAsync(1);
     }
-    public async void Play(FavoriteModel o)
+    public Task PlayAsync(FavoriteModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
-        var detail = await apiService?.ReqQryVideoDetailsAsync(req);
+        return Task.Run(async () =>
+        {
+            var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+            var detail = await apiService?.ReqQryVideoDetailsAsync(req);
+            Execute.PostToUIThread(() =>
+            {
+                var playVM = container?.Get<PlayerViewModel>();
 
-        var playVM = container?.Get<PlayerViewModel>();
+                //  播放列表
+                var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+                playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
+                windowManager?.ShowWindow(playVM);
+            });
 
-        //  播放列表
-        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
-        windowManager?.ShowWindow(playVM);
+        });
     }
     private Task PageIndexChangedAsync(int pageIndex)
     {
@@ -81,7 +87,7 @@ internal class FavoriteViewModel(IContainer container,
             {
                 Execute.PostToUIThreadAsync(() =>
                 {
-                    if (PageIndex ==1)
+                    if (PageIndex == 1)
                     {
                         Favorites = [.. FavoriteEnumerable.Take(PageSize)];
                     }

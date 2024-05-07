@@ -174,17 +174,24 @@ public class VideoViewModel(IApiService apiService,
 
 
 
-    public async void Play(VideoModel o)
+    public Task PlayAsync(VideoModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
-        var detail = await apiService.ReqQryVideoDetailsAsync(req);
+        return Task.Run(async () =>
+         {
+             var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+             var detail = await apiService.ReqQryVideoDetailsAsync(req);
 
-        var playVM = container.Get<PlayerViewModel>();
+             Execute.PostToUIThread(() =>
+             {
+                 var playVM = container.Get<PlayerViewModel>();     
+                 //  播放列表
+                 var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+                 playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
 
-        //  播放列表
-        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
-        windowManager.ShowWindow(playVM);
+                 windowManager.ShowWindow(playVM);
+             });
+
+         });
     }
 
 

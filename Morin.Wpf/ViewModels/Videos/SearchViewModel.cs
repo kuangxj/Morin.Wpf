@@ -13,7 +13,7 @@ namespace Morin.Wpf.ViewModels.Videos;
 
 public class SearchViewModel(IContainer container,
     IAppService appService,
-    ISourceProtocolAdapter  sourceProtocolAdapter,
+    ISourceProtocolAdapter sourceProtocolAdapter,
     IEventAggregator eventAggregator,
     IMapper mapper,
     IApiService apiService, IWindowManager windowManager) : Screen
@@ -64,8 +64,8 @@ public class SearchViewModel(IContainer container,
               {
                   Execute.PostToUIThreadAsync(() =>
                   {
-                      if (PageIndex ==1)
-                      {                        
+                      if (PageIndex == 1)
+                      {
                           Videos = [.. VideoList.Take(PageSize)];
                       }
                       else
@@ -149,17 +149,23 @@ public class SearchViewModel(IContainer container,
         }
     }
 
-    public async void Play(VideoModel o)
+    public Task PlayAsync(VideoModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
-        var detail = await apiService.ReqQryVideoDetailsAsync(req);
+        return Task.Run(async () =>
+        {
+            var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+            var detail = await apiService.ReqQryVideoDetailsAsync(req);
+            Execute.PostToUIThread(() =>
+            {
+                var playVM = container.Get<PlayerViewModel>();
 
-        var playVM = container.Get<PlayerViewModel>();
+                //  播放列表
+                var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+                playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
+                windowManager.ShowWindow(playVM);
+            });
 
-        //  播放列表
-        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
-        windowManager.ShowWindow(playVM);
+        });
     }
 
     public void BackTo()

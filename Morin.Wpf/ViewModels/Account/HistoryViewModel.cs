@@ -64,17 +64,23 @@ internal class HistoryViewModel(IContainer container,
 
         PageIndexChangedAsync(1);
     }
-    public async void Play(HistoryViewsModel o)
+    public Task PlayAsync(HistoryViewsModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
-        var detail = await apiService?.ReqQryVideoDetailsAsync(req);
+        return Task.Run(async () =>
+        {
+            var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+            var detail = await apiService?.ReqQryVideoDetailsAsync(req);
+            Execute.PostToUIThread(() =>
+            {
+                var playVM = container?.Get<PlayerViewModel>();
 
-        var playVM = container?.Get<PlayerViewModel>();
+                //  播放列表
+                var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+                playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
+                windowManager?.ShowWindow(playVM);
+            });
 
-        //  播放列表
-        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
-        windowManager?.ShowWindow(playVM);
+        });
     }
     private Task PageIndexChangedAsync(int pageIndex)
     {
