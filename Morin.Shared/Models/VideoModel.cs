@@ -98,4 +98,6 @@ public class VideoModel : Model, ICloneable
 
     public string? Episode { get; set; }
     public int Sort { get; set; }
+
+    public string Key => $"{SourceID}|{VodId}|{Episode}";
 }

@@ -254,7 +254,7 @@ public class AppService(IAppStorage appStorage, AppSettingsConfig appSettingsCon
         models = JsonProvider.FromPathToObjects<TVSourceModel>(appSettingsConfig.TVSource);
         if (models != null && models.Count != 0)
         {
-            TVSourceAddOrUpdate(models);  
+            TVSourceAddOrUpdate(models);
             return models;
         }
         return [];
@@ -292,5 +292,49 @@ public class AppService(IAppStorage appStorage, AppSettingsConfig appSettingsCon
     public void TVSourceAddOrUpdate(IEnumerable<TVSourceModel> models)
     {
         appStorage.TVSources.AddRange(models);
+    }
+
+    public IEnumerable<FavoriteModel> GetFavorites()
+    {
+        var models = appStorage.FavoriteDict.Values;
+        if (models.Count != 0)
+        {
+            return models;
+        }
+        models = JsonProvider.FromPathToObjects<FavoriteModel>(appSettingsConfig.Favorites);
+        if (models != null && models.Count != 0)
+        {
+            FavoriteAddOrUpdate(models);
+
+            return models;
+        }
+        return [];
+    }
+
+    public void FavoriteAddOrUpdate(FavoriteModel model)
+    {
+        appStorage.FavoriteDict.AddOrUpdate(model.Key, model, (k, v) => model);
+    }
+
+    public void FavoriteAddOrUpdate(IEnumerable<FavoriteModel> models)
+    {
+        foreach (var item in models)
+        {
+            FavoriteAddOrUpdate(item);
+        }
+    }
+
+    public void FavoriteTryRemove(string key)
+    {
+        appStorage.FavoriteDict.TryRemove(key, out _);
+    }
+    public void LoadFavorites()
+    {
+        var models = JsonProvider.FromPathToObjects<FavoriteModel>(appSettingsConfig.Favorites);
+        if (models != null && models.Count != 0)
+        {
+            appStorage.FavoriteDict.Clear();
+            FavoriteAddOrUpdate(models);
+        }
     }
 }

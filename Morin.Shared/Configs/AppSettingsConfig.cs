@@ -11,4 +11,5 @@ public class AppSettingsConfig
     public string? HistoryViews { get; set; }
     public string? PlaySkipTimes { get; set; }
     public string? HistorySearchs { get; set; }
+    public string? Favorites { get; set; }
 }

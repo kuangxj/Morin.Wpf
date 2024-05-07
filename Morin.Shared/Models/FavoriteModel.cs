@@ -2,7 +2,7 @@
 
 namespace Morin.Shared.Models;
 
-public class HistoryViewsModel : Model
+public class FavoriteModel
 {
     [JsonIgnore]
     public string Key => $"{SourceID}|{VodId}|{Episode}";

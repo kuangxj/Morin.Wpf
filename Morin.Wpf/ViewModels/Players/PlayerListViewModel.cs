@@ -48,6 +48,10 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
                     Episode = value.Episode,
                     SourceID = value.SourceID,
                     VodId = value.VodId,
+                    VodPlayUrl=value.VodPlayUrl,
+                    VodPic=value.VodPic,
+                    VodName=value.VodName,
+                    VodRemarks=value.VodRemarks
                 };
                 appService.HistoryViewsAddOrUpdate(history);
 

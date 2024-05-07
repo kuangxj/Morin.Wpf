@@ -12,4 +12,6 @@ public interface IAppStorage
     ConcurrentDictionary<string, PlaySkipTimeModel> PlaySkipTimeDict { get; set; }
     ConcurrentDictionary<string, HistorySearchModel> HistorySearchDict { get; set; }
     List<TVSourceModel> TVSources { get; set; }
+
+    ConcurrentDictionary<string, FavoriteModel> FavoriteDict { get; set; }
 }

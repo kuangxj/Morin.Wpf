@@ -7,6 +7,7 @@ using Morin.Shared.Models;
 using Morin.Wpf.Messages.Players;
 using Stylet;
 using StyletIoC;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Morin.Wpf.ViewModels.Players;
@@ -29,8 +30,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     public bool IsPlay { get; set; }
     private VideoSettingsConfig videoSettings;
     private List<PlaySkipTimeModel> playSkipTimes;  
-    public Dictionary<string, List<VideoModel>> PlayDict { get; set; }
-    public VideoModel VideoItem { get; set; }
+    public Dictionary<string, List<VideoModel>> PlayDict { get; set; }  
     public int PlayerListWidth { get; set; } = 300;
     public string Title { get; set; }
     public Player Player { get; set; }
@@ -74,6 +74,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         }
     }
     private VideoModel curVideo;
+    private Dictionary<string, bool> IsSkipTimeDict = [];
 
     public PlayerListViewModel? PlayerListView { get; set; }
 
@@ -82,6 +83,10 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         if (message.Model != null && message.Model.VodPlayUrl.EndsWith("m3u8"))
         {
             curVideo = message.Model;
+
+            //  初始化跳转记录           
+            IsSkipTimeDict.TryAdd(curVideo.Key, false);
+
             Player.OpenAsync(message.Model.VodPlayUrl);
         }
     }
@@ -171,10 +176,15 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             if (sender is Player player)
             {
                 //  跳转开关：开的情况
-                if (SkipTimeSwitch)
+                if (SkipTimeSwitch&& IsSkipTimeDict.TryGetValue(curVideo.Key,out var isSkipTime))
                 {
-                    //  满足条件就结尾
-                    SkipEnd();
+                    if (!isSkipTime)
+                    {
+                        //  满足条件就结尾
+                        SkipEnd();
+                        //  置跳转记录
+                        IsSkipTimeDict[curVideo.Key] = true;
+                    }
                 }
             }
         }

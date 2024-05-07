@@ -13,7 +13,7 @@ public enum NetworkCarrierType
     [Description("其他通信 ")] Other,
     [Description("中国移动")] CMCC,
     [Description("中国联通")] CUCC,
-    [Description("中国电信 ")] CTCC, 
+    [Description("中国电信 ")] CTCC,
 
 }
 

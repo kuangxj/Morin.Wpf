@@ -25,7 +25,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <!--  菜单  -->
-        <ListBox ItemsSource="{Binding Path=Menus}">
+        <ListBox HorizontalAlignment="Center" ItemsSource="{Binding Path=Menus}" SelectedItem="{Binding Path=MenuItem}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal" />

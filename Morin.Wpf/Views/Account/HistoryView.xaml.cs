@@ -3,11 +3,11 @@
 namespace Morin.Wpf.Views.Account
 {
     /// <summary>
-    /// HisotryView.xaml 的交互逻辑
+    /// HistoryView.xaml 的交互逻辑
     /// </summary>
-    public partial class HisotryView : UserControl
+    public partial class HistoryView : UserControl
     {
-        public HisotryView()
+        public HistoryView()
         {
             InitializeComponent();
         }

@@ -28,8 +28,15 @@ public interface IAppService
 
     List<TVSourceModel> GetTVSources();
     void TVSourceAddOrUpdate(TVSourceModel model);
-    void TVSourceAddOrUpdate(IEnumerable< TVSourceModel> models);
+    void TVSourceAddOrUpdate(IEnumerable<TVSourceModel> models);
     void TVSourceTryRemove(string groupTitle);
+
+    IEnumerable<FavoriteModel> GetFavorites();
+    void FavoriteAddOrUpdate(FavoriteModel model);
+    void FavoriteAddOrUpdate(IEnumerable<FavoriteModel> models);
+    void FavoriteTryRemove(string key);
+    void LoadFavorites();
+
 
     void MenusSave(IEnumerable<MenuModel> menus);
 

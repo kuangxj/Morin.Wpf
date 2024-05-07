@@ -133,6 +133,8 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
             new MenuModel { Id = 5, ViewModel = "VideoSettingsViewModel", Icon = "MovieOutline", Pid = 3, Selected = false, Sort = 0, Title = "视频设置" },
             new MenuModel { Id = 6, ViewModel = "TelevisionSettingsViewModel", Icon = "TelevisionClassic", Pid = 3, Selected = false, Sort = 0, Title = "电视设置" },
             new MenuModel { Id = 7, ViewModel = "AboutViewModel", Icon = "AboutOutline", Pid = 3, Selected = false, Sort = 0, Title = "关于Morin" },
+            new MenuModel { Id = 8, ViewModel = "FavoriteViewModel", Icon = "HeartOutline", Pid = 4, Selected = false, Sort = 0, Title = "收藏" },
+            new MenuModel { Id = 9, ViewModel = "HistoryViewModel", Icon = "History", Pid = 4, Selected = false, Sort = 0, Title = "历史" },
         ];
     }
     public void AppSettings()

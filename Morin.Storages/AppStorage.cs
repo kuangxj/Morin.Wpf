@@ -16,6 +16,7 @@ public class AppStorage(AppSettingsConfig appSettingsConfig) : IAppStorage, IDis
     public ConcurrentDictionary<string, PlaySkipTimeModel> PlaySkipTimeDict { get; set; } = [];
     public ConcurrentDictionary<string, HistorySearchModel> HistorySearchDict { get; set; } = [];
     public List<TVSourceModel> TVSources { get; set; } = [];
+    public ConcurrentDictionary<string, FavoriteModel> FavoriteDict { get; set; } = [];
 
     public void Dispose()
     {
@@ -25,6 +26,7 @@ public class AppStorage(AppSettingsConfig appSettingsConfig) : IAppStorage, IDis
         JsonProvider.FromContentToFile(appSettingsConfig.HistoryViews, HistoryViewDict.Values);
         JsonProvider.FromContentToFile(appSettingsConfig.PlaySkipTimes, PlaySkipTimeDict.Values);
         JsonProvider.FromContentToFile(appSettingsConfig.HistorySearchs, HistorySearchDict.Values);
+        JsonProvider.FromContentToFile(appSettingsConfig.Favorites, FavoriteDict.Values);
 
         GC.SuppressFinalize(this);
     }
