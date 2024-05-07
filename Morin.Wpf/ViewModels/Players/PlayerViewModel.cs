@@ -1,4 +1,5 @@
-﻿using FlyleafLib;
+﻿using AutoMapper;
+using FlyleafLib;
 using FlyleafLib.MediaPlayer;
 using MaterialDesignThemes.Wpf;
 using Morin.Services;
@@ -16,6 +17,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     AppSettingsConfig appSettingsConfig,
     IAppService appService,
     IContainer container,
+    IMapper mapper,
     ISnackbarMessageQueue snackbarMessageQueue) :
     Conductor<Screen>,
     IDisposable,
@@ -25,14 +27,38 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     private readonly AppSettingsConfig appSettingsConfig = appSettingsConfig;
     private readonly IAppService appService = appService;
     private readonly IContainer container = container;
+    private readonly IMapper mapper = mapper;
     private readonly ISnackbarMessageQueue snackbarMessageQueue = snackbarMessageQueue;
     public WindowState WindowState { get; set; }
     public bool IsPlay { get; set; }
+    private bool _isFavorite;
+    public bool IsFavorite
+    {
+        get => _isFavorite; set
+        {
+            _isFavorite = value;
+            if (value)
+            {
+                FavoriteAddOrUpdate(curVideo);
+            }
+            else
+            {
+                FavoriteRemove(curVideo);
+            }
+        }
+    }
     private VideoSettingsConfig videoSettings;
-    private List<PlaySkipTimeModel> playSkipTimes;  
-    public Dictionary<string, List<VideoModel>> PlayDict { get; set; }  
+    private List<PlaySkipTimeModel> playSkipTimes;
+    public Dictionary<string, IEnumerable<VideoModel>> PlayDict { get; set; }
     public int PlayerListWidth { get; set; } = 300;
-    public string Title { get; set; }
+    public string Title
+    {
+        get
+        {
+            var baseTitle = "Morin";
+            return curVideo != null ? $"{baseTitle} {curVideo.VodName}" : baseTitle;
+        }
+    }
     public Player Player { get; set; }
     public Config Config { get; set; }
     public ISnackbarMessageQueue MessageQueue { get; } = snackbarMessageQueue;
@@ -90,7 +116,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             Player.OpenAsync(message.Model.VodPlayUrl);
         }
     }
-  
+
 
     private void InitializeComponent()
     {
@@ -176,7 +202,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             if (sender is Player player)
             {
                 //  跳转开关：开的情况
-                if (SkipTimeSwitch&& IsSkipTimeDict.TryGetValue(curVideo.Key,out var isSkipTime))
+                if (SkipTimeSwitch && IsSkipTimeDict.TryGetValue(curVideo.Key, out var isSkipTime))
                 {
                     if (!isSkipTime)
                     {
@@ -197,14 +223,14 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         // Mainly for HLS to pass the original query which might includes session keys       
         config.Demuxer.FormatOptToUnderlying = true;
         //  加大缓存进度
-        config.Demuxer.BufferDuration = 300 *(long)1000 * 10000;
+        config.Demuxer.BufferDuration = 300 * (long)1000 * 10000;
         // To allow embedded atempo filter for speed
         config.Audio.FiltersEnabled = true;
 
         // Set it empty so it will include it when we save it
-        config.Video.GPUAdapter = "";       
+        config.Video.GPUAdapter = "";
 
-        config.Subtitles.SearchLocal = true;  
+        config.Subtitles.SearchLocal = true;
         return config;
     }
 
@@ -226,13 +252,14 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     private void InitPlayListView()
     {
         PlayerListView = container.Get<PlayerListViewModel>();
+
         PlayerListView.PropertyChanged -= PlayerListView_PropertyChanged;
         PlayerListView.PlayDict = PlayDict;
-        PlayerListView.PlayMode=PlayMode;
+        PlayerListView.PlayMode = PlayMode;
         PlayerListView.VideosSortByAsc = videoSettings.VideosSortByAsc;
-        ActiveItem = PlayerListView;
-
         PlayerListView.PropertyChanged += PlayerListView_PropertyChanged;
+
+        ActiveItem = PlayerListView;
     }
 
     private void PlayerListView_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -326,5 +353,16 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             Player.Dispose();
         }
         GC.SuppressFinalize(this);
+    }
+
+    private void FavoriteAddOrUpdate(VideoModel model)
+    {
+        var favoriteModel = mapper.Map<FavoriteModel>(model);
+        appService.FavoriteAddOrUpdate(favoriteModel);
+    }
+    private void FavoriteRemove(VideoModel model)
+    {
+        var favoriteModel = mapper.Map<FavoriteModel>(model);
+        appService.FavoriteTryRemove(favoriteModel.Key);
     }
 }

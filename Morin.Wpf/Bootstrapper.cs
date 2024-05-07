@@ -12,6 +12,7 @@ using Morin.Wpf.ViewModels;
 using Stylet;
 using StyletIoC;
 using System.Windows.Threading;
+using Morin.Wpf.Adapters;
 
 namespace Morin.Wpf;
 
@@ -51,8 +52,12 @@ public class Bootstrapper : Bootstrapper<ShellViewModel>
         //  服务注入
         builder.Bind<IApiService>().To<ApiService>().InSingletonScope();
         builder.Bind<IAppService>().To<AppService>().InSingletonScope();
-
+        //  存储注入
         builder.Bind<IAppStorage>().To<AppStorage>().InSingletonScope();
+
+        //  来源协议适配器注入
+        builder.Bind<ISourceProtocolAdapter>().To<ThinkPhpSourceProtocolAdapter>().InSingletonScope();
+
     }
 
 

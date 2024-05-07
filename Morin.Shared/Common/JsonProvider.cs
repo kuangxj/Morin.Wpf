@@ -3,7 +3,7 @@ namespace Morin.Shared.Common;
 
 public class JsonProvider
 {
-    public static T FromContentToObject<T>(string jsonContent)
+    public static T? FromContentToObject<T>(string jsonContent)
     {
         return JsonConvert.DeserializeObject<T>(jsonContent);
     }

@@ -23,6 +23,8 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
             if (jsonModel != null)
             {
                 var resault = mapper.Map<VideoModel>(jsonModel.Videos[0]);
+                //  赋来源ID
+                resault.SourceID = req.SourceID;
                 return resault;
             }
         }
@@ -70,7 +72,7 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
             var apiString = $"api.php/provide/vod/?ac={req.AcName}";
 
             //  优先Json
-            var baseUri = baseMediaSource?.JsonUri ?? baseMediaSource?.XmlUri;
+            var baseUri = baseMediaSource.JsonUri ?? baseMediaSource.XmlUri;
 
             var subUri = new Uri(baseUri);
 
@@ -84,9 +86,9 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
             {
                 para += $"&t={req.ClassID}";
             }
-            if (!string.IsNullOrEmpty(req.Ids))
+            if (!string.IsNullOrEmpty(req.VodIds))
             {
-                para += $"&ids={req.Ids}";
+                para += $"&ids={req.VodIds}";
             }
             if (req.Hour > 0)
             {

@@ -10,7 +10,7 @@ public class VideoModel : Model, ICloneable
     public int Pid { get; set; }
 
     public int SourceID { get; set; }
-    public string SourceTitle { get; set; }
+    public string? SourceTitle { get; set; }
 
     public int VodId { get; set; }
     public int TypeId { get; set; }
@@ -24,7 +24,7 @@ public class VideoModel : Model, ICloneable
     public string? VodColor { get; set; }
     public string? VodTag { get; set; }
     public string? VodClass { get; set; }
-    public string? VodPic { get; set; } = "./Resources/Images/login_backgroud_07.png";
+    public string? VodPic { get; set; } = "pack://application:,,,/Morin.Wpf;component/Resources/Images/login_backgroud_07.png";
     public string? VodPicThumb { get; set; }
     public string? VodPicSlide { get; set; }
     public string? VodPicScreenshot { get; set; }

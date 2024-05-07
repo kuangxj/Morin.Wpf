@@ -1,6 +1,7 @@
 ﻿using Morin.Services;
 using Morin.Shared.Models;
 using Morin.Shared.Parameters;
+using Morin.Wpf.Adapters;
 using Morin.Wpf.Common;
 using Morin.Wpf.Messages;
 using Morin.Wpf.ViewModels.Players;
@@ -11,11 +12,13 @@ namespace Morin.Wpf.ViewModels.Videos;
 
 public class SearchViewModel(IContainer container,
     IAppService appService,
+    ISourceProtocolAdapter  sourceProtocolAdapter,
     IEventAggregator eventAggregator,
     IApiService apiService, IWindowManager windowManager) : Screen
 {
     private readonly IContainer container = container;
     private readonly IAppService appService = appService;
+    private readonly ISourceProtocolAdapter sourceProtocolAdapter = sourceProtocolAdapter;
     private readonly IEventAggregator eventAggregator = eventAggregator;
     private readonly IApiService apiService = apiService;
     private readonly IWindowManager windowManager = windowManager;
@@ -58,8 +61,8 @@ public class SearchViewModel(IContainer container,
               {
                   Execute.PostToUIThreadAsync(() =>
                   {
-                      if (PageIndex <= 0)
-                      {
+                      if (PageIndex ==1)
+                      {                        
                           Videos = [.. VideoList.Take(PageSize)];
                       }
                       else
@@ -82,6 +85,8 @@ public class SearchViewModel(IContainer container,
         {
             TaskSearch(KeyWord);
         }
+
+
     }
 
     private Task MediaSourceItemChangedAsync(MediaSourceModel model)
@@ -113,7 +118,10 @@ public class SearchViewModel(IContainer container,
             {
                 VideoList.AddRange(rspData.Videos);
                 Total = VideoList.Count;
-                PageIndexChangedAsync(1);
+                if (Total <= PageSize)
+                {
+                    PageIndexChangedAsync(1);
+                }
             }
         }
     }
@@ -140,13 +148,13 @@ public class SearchViewModel(IContainer container,
 
     public async void Play(VideoModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, Ids = $"{o.VodId}", AcName = "detail" };
+        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, VodIds = $"{o.VodId}", AcName = "detail" };
         var detail = await apiService.ReqQryVideoDetailsAsync(req);
 
         var playVM = container.Get<PlayerViewModel>();
 
         //  播放列表
-        playVM.PlayDict = VideoUriToEspode.FromUrlToEspodes(detail);
+        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(detail.VodPlayUrl,detail.VodPlayFrom);
         windowManager.ShowWindow(playVM);
     }
 

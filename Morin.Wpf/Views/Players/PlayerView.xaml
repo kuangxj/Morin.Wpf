@@ -12,7 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:players="clr-namespace:Morin.Wpf.ViewModels.Players"
     xmlns:s="https://github.com/canton7/Stylet"
-    Title="Morin"
+    Title="{Binding Path=Title}"
     MinWidth="150"
     MinHeight="80"
     d:DataContext="{d:DesignInstance Type=players:PlayerViewModel}"
@@ -232,6 +232,16 @@
                         <StackPanel.Background>
                             <SolidColorBrush Opacity="0.35" Color="{Binding Player.Config.Video.BackgroundColor}" />
                         </StackPanel.Background>
+                        <!--  收藏  -->
+                        <ToggleButton
+                            Margin="10,0"
+                            materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=Heart}"
+                            Background="Transparent"
+                            Content="{materialDesign:PackIcon Kind=HeartOutline}"
+                            Focusable="False"
+                            Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                            IsChecked="{Binding IsFavorite}"
+                            Style="{StaticResource MaterialDesignActionToggleButton}" />
                         <!--  跳转设置  -->
                         <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="True">
                             <materialDesign:PopupBox.ToggleContent>

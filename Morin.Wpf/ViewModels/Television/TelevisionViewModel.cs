@@ -83,7 +83,7 @@ public class TelevisionViewModel(IAppService appService, IContainer container, I
 
     public void Play(TVSourceDetailModel o)
     {
-        var playDict = new Dictionary<string, List<VideoModel>>();
+        var playDict = new Dictionary<string, IEnumerable<VideoModel>>();
         var videoList = new List<VideoModel>();
         var model = new VideoModel { Episode = "1", VodPlayUrl = o.WebAddr };
         videoList.Add(model);

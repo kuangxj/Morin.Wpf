@@ -16,5 +16,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<RspQryVideoModel, RspVideoListJsonDataModel>().ReverseMap();
         CreateMap<RspQryVideoModel, RspXmlDataModel>().ReverseMap();
+
+        CreateMap<VideoModel, FavoriteModel>().ReverseMap();
+        CreateMap<VideoModel, HistoryViewsModel>().ReverseMap();
     }
 }

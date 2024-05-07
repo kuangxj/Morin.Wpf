@@ -1,4 +1,5 @@
-﻿using FlyleafLib.MediaFramework.MediaPlaylist;
+﻿using AutoMapper;
+using FlyleafLib.MediaFramework.MediaPlaylist;
 using Morin.Services;
 using Morin.Shared.Models;
 using Morin.Wpf.Messages.Players;
@@ -6,11 +7,12 @@ using Stylet;
 
 namespace Morin.Wpf.ViewModels.Players;
 
-public class PlayerListViewModel(IAppService appService, IEventAggregator eventAggregator) : Screen
+public class PlayerListViewModel(IAppService appService, IMapper mapper, IEventAggregator eventAggregator) : Screen
 {
     public PlayMode PlayMode { get; set; } = PlayMode.Video;
     public BindableCollection<VideoModel> Videos { get; set; }
     private readonly IAppService appService = appService;
+    private readonly IMapper mapper = mapper;
     private readonly IEventAggregator eventAggregator = eventAggregator;
     private bool videosSortByAsc;
     public bool VideosSortByAsc
@@ -43,16 +45,7 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
             if (value != null)
             {
                 //  更新历史观看
-                var history = new HistoryViewsModel
-                {
-                    Episode = value.Episode,
-                    SourceID = value.SourceID,
-                    VodId = value.VodId,
-                    VodPlayUrl=value.VodPlayUrl,
-                    VodPic=value.VodPic,
-                    VodName=value.VodName,
-                    VodRemarks=value.VodRemarks
-                };
+                var history =mapper.Map<HistoryViewsModel>(value);                 
                 appService.HistoryViewsAddOrUpdate(history);
 
                 //  当前播放下标
@@ -86,8 +79,8 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
             }
             else
             {
-                PlayList = PlayDict[value];
-                if (PlayList.Count > 0)
+                PlayList = PlayDict[value].ToList();
+                if (PlayList.Count>0)
                 {
                     VideoItem = PlayList[0];
                 }
@@ -109,7 +102,7 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
     public List<string> Lines { get; set; }
     private Dictionary<string, string> LineDict = [];
 
-    public Dictionary<string, List<VideoModel>> PlayDict { get; set; } = [];
+    public Dictionary<string, IEnumerable<VideoModel>> PlayDict { get; set; } = [];
 
     protected override void OnInitialActivate()
     {
@@ -140,7 +133,6 @@ public class PlayerListViewModel(IAppService appService, IEventAggregator eventA
             {
                 Line = Lines[0];
             }
-
         });
     }
 

@@ -26,7 +26,7 @@ public class Parameter
     /// <summary>
     /// 剧集ID，多个用英文逗号隔开
     /// </summary>
-    public string? Ids { get; set; }
+    public string? VodIds { get; set; }
     /// <summary>
     /// 分类ID
     /// </summary>

@@ -3,6 +3,7 @@ using Morin.Services;
 using Morin.Shared.Configs;
 using Morin.Shared.Models;
 using Morin.Shared.Parameters;
+using Morin.Wpf.Adapters;
 using Morin.Wpf.Common;
 using Morin.Wpf.Messages.Players;
 using Morin.Wpf.ViewModels.Players;
@@ -17,6 +18,7 @@ public class VideoViewModel(IApiService apiService,
     IWindowManager windowManager,
     IEventAggregator eventAggregator,
     IAppService appService,
+    ISourceProtocolAdapter sourceProtocolAdapter,
     AppSettingsConfig appSettingsConfig,
     IMapper mapper) : Conductor<Screen>
 {
@@ -25,6 +27,7 @@ public class VideoViewModel(IApiService apiService,
     private readonly IWindowManager windowManager = windowManager;
     private readonly IEventAggregator eventAggregator = eventAggregator;
     private readonly IAppService appService = appService;
+    private readonly ISourceProtocolAdapter sourceProtocolAdapter = sourceProtocolAdapter;
     private readonly AppSettingsConfig appSettingsConfig = appSettingsConfig;
     private readonly IMapper mapper = mapper;
 
@@ -173,13 +176,12 @@ public class VideoViewModel(IApiService apiService,
 
     public async void Play(VideoModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, Ids = $"{o.VodId}", AcName = "detail" };
+        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, VodIds = $"{o.VodId}", AcName = "detail" };
         var detail = await apiService.ReqQryVideoDetailsAsync(req);
 
         var playVM = container.Get<PlayerViewModel>();
-
         //  播放列表
-        playVM.PlayDict = VideoUriToEspode.FromUrlToEspodes(detail);
+        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(detail.VodPlayUrl,detail.VodPlayFrom);
         windowManager.ShowWindow(playVM);
     }
 
@@ -197,6 +199,7 @@ public class VideoViewModel(IApiService apiService,
                 if (rspData != null)
                 {
                     Videos?.Clear();
+
                     Total = rspData.Total;
                     PageSize = rspData.PageSize;
                     PageIndex = rspData.PageIndex;
@@ -217,7 +220,9 @@ public class VideoViewModel(IApiService apiService,
     {
         Task.Run(async () =>
          {
-             var req = new ReqQryVideoPara { SourceID = ClassItem.SourceID, ClassID = ClassItem.Id, AcName = "detail", PageIndex = pageIndex };
+             var sourceID = ClassItem.SourceID;
+             var clsID = ClassItem.Id;
+             var req = new ReqQryVideoPara { SourceID = sourceID, ClassID = clsID, AcName = "detail", PageIndex = pageIndex };
              var rspData = await apiService.ReqQryVideosAsync(req);
 
              if (rspData != null)
@@ -227,7 +232,7 @@ public class VideoViewModel(IApiService apiService,
                      Videos?.Clear();
                      rspData.Videos.ForEach(x =>
                      {
-                         x.SourceID = ClassItem.SourceID;
+                         x.SourceID = sourceID;
                          Videos.Add(mapper.Map<VideoModel>(x));
                      });
                  });

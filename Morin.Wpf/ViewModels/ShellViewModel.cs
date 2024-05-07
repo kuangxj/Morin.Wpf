@@ -114,6 +114,7 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
         //  菜单设置
         var menus = CreateMenuBars();
         appService.MenusSave(menus);
+
         //  加载菜单
         Menus = [.. menus.Where(x => x.Pid == 0&&x.Visvisibility==true)];
         MenuItem = Menus.First(x => x.Selected == true);
