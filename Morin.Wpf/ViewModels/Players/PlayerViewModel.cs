@@ -30,7 +30,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     private readonly IMapper mapper = mapper;
     private readonly ISnackbarMessageQueue snackbarMessageQueue = snackbarMessageQueue;
     public WindowState WindowState { get; set; }
-    public bool IsPlay { get; set; }  
+    public bool IsPlay { get; set; }
     public bool IsFavorite { get; set; }
     private VideoSettingsConfig videoSettings;
     private List<PlaySkipTimeModel> playSkipTimes;
@@ -85,25 +85,28 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         }
     }
     private VideoModel curVideo;
-    private Dictionary<string, bool> IsSkipTimeDict = [];
+    private Dictionary<string, bool> SkipTimeStateDict = [];
 
     public PlayerListViewModel? PlayerListView { get; set; }
 
     public void Handle(OnEpisodeChangedMessage message)
     {
-        if (message.Model != null && message.Model.VodPlayUrl.EndsWith("m3u8"))
+        if (message.Model != null )
         {
             curVideo = message.Model;
 
+            //  设置收藏状态
+            SetFavoriteState(message.Model);
+
             //  初始化跳转记录           
-            IsSkipTimeDict.TryAdd(curVideo.Key, false);
+            SkipTimeStateDict.TryAdd(curVideo.Key, false);
 
             Player.OpenAsync(message.Model.VodPlayUrl);
         }
     }
 
 
-    private void InitializeComponent()
+    private void InitializePlayerComponent()
     {
         // Initializes Engine (Specifies FFmpeg libraries path which is required)
         Engine.Start(new EngineConfig()
@@ -187,14 +190,14 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             if (sender is Player player)
             {
                 //  跳转开关：开的情况
-                if (SkipTimeSwitch && IsSkipTimeDict.TryGetValue(curVideo.Key, out var isSkipTime))
+                if (SkipTimeSwitch && SkipTimeStateDict.TryGetValue(curVideo.Key, out var isSkipTime))
                 {
                     if (!isSkipTime)
                     {
                         //  满足条件就结尾
                         SkipEnd();
                         //  置跳转记录
-                        IsSkipTimeDict[curVideo.Key] = true;
+                        SkipTimeStateDict[curVideo.Key] = true;
                     }
                 }
             }
@@ -223,17 +226,24 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     {
         base.OnInitialActivate();
 
-        appService.LoadHistoryViews();
-        appService.LoadPlaySkipTimes();
-
         videoSettings = appService.GetVideoSettings();
         playSkipTimes = [.. appService.GetPlaySkipTimes()];
 
-        InitializeComponent();
+        InitializePlayerComponent();
 
-        InitPlayListView();
-
+        InitPlayListView();      
     }
+
+    private void SetFavoriteState(VideoModel model)
+    {
+        var favorites = appService.GetFavorites();
+        if (model != null)
+        {
+            IsFavorite = favorites.FirstOrDefault(x => x.VodSourceID == model.VodSourceID 
+            && x.VodId == model.VodId) != null;
+        }
+    }
+
     private void InitPlayListView()
     {
         PlayerListView = container.Get<PlayerListViewModel>();

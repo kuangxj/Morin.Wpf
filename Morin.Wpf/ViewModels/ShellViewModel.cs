@@ -107,20 +107,30 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
 
     private void LoadDefaultData()
     {
-        //  加载历史查询
+        //  加载来源
+        appService.LoadMediaSources();
+        //  加载历史
         appService.LoadHistorySearchs();
-        HistorySearchs = [.. appService.GetHistorySearchs()];
+        //  加载电视设置
+        appService.LoadTVSources();
+        //  加载历史观看
+        appService?.LoadHistoryViews();
+        //  加载收藏
+        appService?.LoadFavorites();
+        //  加载跳过【开始、结尾】
+        appService?.LoadPlaySkipTimes();
+
+        HistorySearchs = [.. appService?.GetHistorySearchs()];
 
         //  菜单设置
         var menus = CreateMenuBars();
-        appService.MenusSave(menus);
+        appService?.MenusSave(menus);
 
         //  加载菜单
         Menus = [.. menus.Where(x => x.Pid == 0&&x.Visvisibility==true)];
         MenuItem = Menus.First(x => x.Selected == true);
 
-        //  加载电视设置
-        appService.LoadTVSources();
+
     }
 
 

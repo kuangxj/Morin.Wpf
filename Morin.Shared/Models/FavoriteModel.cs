@@ -5,7 +5,7 @@ namespace Morin.Shared.Models;
 public class FavoriteModel : Model
 {
     [JsonIgnore]
-    public string Key => $"{VodSourceID}|{VodId}|{Episode}";
+    public string Key => $"{VodSourceID}|{VodId}";
     public int VodSourceID { get; set; }
     [JsonIgnore]
     public string? VodSourceTitle { get; set; }    

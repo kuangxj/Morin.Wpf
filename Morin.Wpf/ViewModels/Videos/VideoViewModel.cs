@@ -129,9 +129,7 @@ public class VideoViewModel(IApiService apiService,
         base.OnInitialActivate();
         CreateDirectories();
 
-        appService.LoadMediaSources();
-        appService.LoadHistoryViews();
-        LoadMediaSources();
+        SetMediaSources();
     }
 
 
@@ -249,7 +247,7 @@ public class VideoViewModel(IApiService apiService,
          });
     }
 
-    private void LoadMediaSources()
+    private void SetMediaSources()
     {
         var videoSources = appService.GetMediaSources();
         if (videoSources.Any())

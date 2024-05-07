@@ -28,12 +28,6 @@ internal class AccountViewModel(IContainer container, IAppService appService) : 
     {
         base.OnInitialActivate();
         SetMenusAsync("我的");
-
-        //  加载历史观看
-        appService?.LoadHistoryViews();
-
-        //  加载收藏
-        appService?.LoadFavorites();
     }
     private void SetDefaultMenu()
     {
