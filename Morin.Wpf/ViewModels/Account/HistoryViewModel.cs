@@ -12,8 +12,8 @@ using System.Windows.Forms.Design;
 
 namespace Morin.Wpf.ViewModels.Account;
 
-internal class HistoryViewModel(IContainer container, 
-    IApiService apiService, 
+internal class HistoryViewModel(IContainer container,
+    IApiService apiService,
     ISourceProtocolAdapter sourceProtocolAdapter,
     IAppService appService,
     IMapper mapper,
@@ -54,7 +54,7 @@ internal class HistoryViewModel(IContainer container,
             {
                 if (string.IsNullOrEmpty(item.VodSourceTitle))
                 {
-                   var source= appService?.GetMediaSources().FirstOrDefault(x => x.Id == item.VodSourceID);
+                    var source = appService?.GetMediaSources().FirstOrDefault(x => x.Id == item.VodSourceID);
                     item.VodSourceTitle = source?.Title;
                 }
             }
@@ -84,13 +84,13 @@ internal class HistoryViewModel(IContainer container,
             {
                 Execute.PostToUIThreadAsync(() =>
                 {
-                    if (PageIndex ==1)
+                    if (PageIndex == 1)
                     {
                         HistoryViews = [.. HistoryViewEnumerable.Take(PageSize)];
                     }
                     else
                     {
-                        HistoryViews = [.. HistoryViewEnumerable.Skip(PageIndex * PageSize).Take(PageSize)];
+                        HistoryViews = [.. HistoryViewEnumerable.Skip((PageIndex - 1) * PageSize).Take(PageSize)];
                     }
                 });
             }

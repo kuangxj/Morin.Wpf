@@ -87,7 +87,7 @@ internal class FavoriteViewModel(IContainer container,
                     }
                     else
                     {
-                        Favorites = [.. FavoriteEnumerable.Skip(PageIndex * PageSize).Take(PageSize)];
+                        Favorites = [.. FavoriteEnumerable.Skip((PageIndex - 1) * PageSize).Take(PageSize)];
                     }
                 });
             }

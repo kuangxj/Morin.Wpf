@@ -70,7 +70,7 @@ public class SearchViewModel(IContainer container,
                       }
                       else
                       {
-                          Videos = [.. VideoList.Skip(PageIndex * PageSize).Take(PageSize)];
+                          Videos = [.. VideoList.Skip((PageIndex - 1) * PageSize).Take(PageSize)];
                       }
                   });
               }
