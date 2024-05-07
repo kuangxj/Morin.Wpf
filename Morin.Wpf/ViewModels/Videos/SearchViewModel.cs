@@ -1,4 +1,5 @@
-﻿using Morin.Services;
+﻿using AutoMapper;
+using Morin.Services;
 using Morin.Shared.Models;
 using Morin.Shared.Parameters;
 using Morin.Wpf.Adapters;
@@ -14,12 +15,14 @@ public class SearchViewModel(IContainer container,
     IAppService appService,
     ISourceProtocolAdapter  sourceProtocolAdapter,
     IEventAggregator eventAggregator,
+    IMapper mapper,
     IApiService apiService, IWindowManager windowManager) : Screen
 {
     private readonly IContainer container = container;
     private readonly IAppService appService = appService;
     private readonly ISourceProtocolAdapter sourceProtocolAdapter = sourceProtocolAdapter;
     private readonly IEventAggregator eventAggregator = eventAggregator;
+    private readonly IMapper mapper = mapper;
     private readonly IApiService apiService = apiService;
     private readonly IWindowManager windowManager = windowManager;
     private List<VideoModel> VideoList = [];
@@ -95,7 +98,7 @@ public class SearchViewModel(IContainer container,
         {
             Execute.PostToUIThreadAsync(() =>
             {
-                Videos = [.. VideoList.Where(x => x.SourceID == model.Id)];
+                Videos = [.. VideoList.Where(x => x.VodSourceID == model.Id)];
             });
         });
     }
@@ -108,10 +111,10 @@ public class SearchViewModel(IContainer container,
         {
             rspData.Videos.ForEach(x =>
             {
-                x.SourceID = sourceID;
-                if (mediaSourceDict.TryGetValue(x.SourceID, out var model))
+                x.VodSourceID = sourceID;
+                if (mediaSourceDict.TryGetValue(x.VodSourceID, out var model))
                 {
-                    x.SourceTitle = model.Title;
+                    x.VodSourceTitle = model.Title;
                 }
             });
             lock (video_Add_Lock)
@@ -148,13 +151,14 @@ public class SearchViewModel(IContainer container,
 
     public async void Play(VideoModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
         var detail = await apiService.ReqQryVideoDetailsAsync(req);
 
         var playVM = container.Get<PlayerViewModel>();
 
         //  播放列表
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(detail.VodPlayUrl,detail.VodPlayFrom);
+        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
         windowManager.ShowWindow(playVM);
     }
 

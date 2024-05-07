@@ -1,17 +1,10 @@
 ﻿namespace Morin.Shared.Models;
 
-public class VideoModel : Model, ICloneable
+public class VideoModel : Model
 {
-    public object Clone()
-    {
-        return MemberwiseClone();//浅拷贝
-    }
-
     public int Pid { get; set; }
-
-    public int SourceID { get; set; }
-    public string? SourceTitle { get; set; }
-
+    public int VodSourceID { get; set; }
+    public string? VodSourceTitle { get; set; }
     public int VodId { get; set; }
     public int TypeId { get; set; }
     public int TypeId1 { get; set; }
@@ -99,5 +92,5 @@ public class VideoModel : Model, ICloneable
     public string? Episode { get; set; }
     public int Sort { get; set; }
 
-    public string Key => $"{SourceID}|{VodId}|{Episode}";
+    public string Key => $"{VodSourceID}|{VodId}|{Episode}";
 }

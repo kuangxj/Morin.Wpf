@@ -1,4 +1,5 @@
-﻿using Morin.Services;
+﻿using AutoMapper;
+using Morin.Services;
 using Morin.Shared.Models;
 using Morin.Shared.Parameters;
 using Morin.Wpf.Adapters;
@@ -13,11 +14,13 @@ namespace Morin.Wpf.ViewModels.Account;
 
 internal class FavoriteViewModel(IContainer container, 
     ISourceProtocolAdapter sourceProtocolAdapter,
+    IMapper mapper,
     IApiService apiService, IAppService appService, IWindowManager windowManager) : Screen
 {
 
     private readonly IContainer? container = container;
     private readonly ISourceProtocolAdapter sourceProtocolAdapter = sourceProtocolAdapter;
+    private readonly IMapper mapper = mapper;
     private readonly IApiService? apiService = apiService;
     private readonly IAppService? appService = appService;
     private readonly IWindowManager? windowManager = windowManager;
@@ -45,19 +48,29 @@ internal class FavoriteViewModel(IContainer container,
         FavoriteEnumerable = appService?.GetFavorites();
         if (FavoriteEnumerable != null)
         {
+            //  
+            foreach (var item in FavoriteEnumerable)
+            {
+                if (string.IsNullOrEmpty(item.VodSourceTitle))
+                {
+                    var source = appService?.GetMediaSources().FirstOrDefault(x => x.Id == item.VodSourceID);
+                    item.VodSourceTitle = source?.Title;
+                }
+            }
             Total = FavoriteEnumerable.Count();
         }
         PageIndexChangedAsync(1);
     }
     public async void Play(FavoriteModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
         var detail = await apiService?.ReqQryVideoDetailsAsync(req);
 
         var playVM = container?.Get<PlayerViewModel>();
 
         //  播放列表
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(detail.VodPlayUrl,detail.VodPlayFrom);
+        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
         windowManager?.ShowWindow(playVM);
     }
     private Task PageIndexChangedAsync(int pageIndex)

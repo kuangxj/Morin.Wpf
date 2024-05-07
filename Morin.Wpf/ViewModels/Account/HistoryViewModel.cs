@@ -16,12 +16,14 @@ internal class HistoryViewModel(IContainer container,
     IApiService apiService, 
     ISourceProtocolAdapter sourceProtocolAdapter,
     IAppService appService,
+    IMapper mapper,
     IWindowManager windowManager) : Screen
 {
     private readonly IContainer? container = container;
     private readonly IApiService? apiService = apiService;
     private readonly ISourceProtocolAdapter sourceProtocolAdapter = sourceProtocolAdapter;
     private readonly IAppService? appService = appService;
+    private readonly IMapper mapper = mapper;
     private readonly IWindowManager? windowManager = windowManager;
 
     private IEnumerable<HistoryViewsModel>? HistoryViewEnumerable;
@@ -47,6 +49,16 @@ internal class HistoryViewModel(IContainer container,
         HistoryViewEnumerable = appService?.GetHistoryViews();
         if (HistoryViewEnumerable != null)
         {
+            //  
+            foreach (var item in HistoryViewEnumerable)
+            {
+                if (string.IsNullOrEmpty(item.VodSourceTitle))
+                {
+                   var source= appService?.GetMediaSources().FirstOrDefault(x => x.Id == item.VodSourceID);
+                    item.VodSourceTitle = source?.Title;
+                }
+            }
+
             Total = HistoryViewEnumerable.Count();
         }
 
@@ -54,13 +66,14 @@ internal class HistoryViewModel(IContainer container,
     }
     public async void Play(HistoryViewsModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
         var detail = await apiService?.ReqQryVideoDetailsAsync(req);
 
         var playVM = container?.Get<PlayerViewModel>();
 
         //  播放列表
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(detail.VodPlayUrl,detail.VodPlayFrom);
+        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
         windowManager?.ShowWindow(playVM);
     }
     private Task PageIndexChangedAsync(int pageIndex)

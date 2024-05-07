@@ -176,12 +176,14 @@ public class VideoViewModel(IApiService apiService,
 
     public async void Play(VideoModel o)
     {
-        var req = new ReqQryVideoDetailPara { SourceID = o.SourceID, VodIds = $"{o.VodId}", AcName = "detail" };
+        var req = new ReqQryVideoDetailPara { SourceID = o.VodSourceID, VodIds = $"{o.VodId}", AcName = "detail" };
         var detail = await apiService.ReqQryVideoDetailsAsync(req);
 
         var playVM = container.Get<PlayerViewModel>();
+
         //  播放列表
-        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(detail.VodPlayUrl,detail.VodPlayFrom);
+        var para = mapper.Map<ThinkPhpVideoParsingPara>(detail);
+        playVM.PlayDict = sourceProtocolAdapter.GetPlayDict(para);
         windowManager.ShowWindow(playVM);
     }
 
@@ -207,7 +209,7 @@ public class VideoViewModel(IApiService apiService,
                     {
                         rspData.Videos.ForEach(x =>
                         {
-                            x.SourceID = o.SourceID;
+                            x.VodSourceID = o.SourceID;
                             Videos.Add(mapper.Map<VideoModel>(x));
                         });
                     });
@@ -232,7 +234,7 @@ public class VideoViewModel(IApiService apiService,
                      Videos?.Clear();
                      rspData.Videos.ForEach(x =>
                      {
-                         x.SourceID = sourceID;
+                         x.VodSourceID = sourceID;
                          Videos.Add(mapper.Map<VideoModel>(x));
                      });
                  });

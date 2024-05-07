@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Morin.Shared.Models;
+using Morin.Shared.Parameters;
 
 namespace Morin.Wpf.Profiles;
 
@@ -19,5 +20,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<VideoModel, FavoriteModel>().ReverseMap();
         CreateMap<VideoModel, HistoryViewsModel>().ReverseMap();
+
+        CreateMap<VideoModel, ThinkPhpVideoParsingPara>().ReverseMap();
+        
     }
 }

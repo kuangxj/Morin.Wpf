@@ -34,7 +34,7 @@ public class AppService(IAppStorage appStorage, AppSettingsConfig appSettingsCon
     }
 
     public IEnumerable<HistoryViewsModel> GetHistoryViews(int sourceID, int vodId)
-        => appStorage.HistoryViewDict.Values.Where(x => x.SourceID == sourceID && x.VodId == vodId);
+        => appStorage.HistoryViewDict.Values.Where(x => x.VodSourceID == sourceID && x.VodId == vodId);
 
 
     public IEnumerable<HistoryViewsModel> GetHistoryViews()
@@ -58,7 +58,7 @@ public class AppService(IAppStorage appStorage, AppSettingsConfig appSettingsCon
     }
 
     public IEnumerable<HistoryViewsModel> GetHistoryViews(int sourceID)
-        => appStorage.HistoryViewDict.Values.Where(x => x.SourceID == sourceID);
+        => appStorage.HistoryViewDict.Values.Where(x => x.VodSourceID == sourceID);
 
 
     public IEnumerable<MediaSourceModel> GetMediaSources()

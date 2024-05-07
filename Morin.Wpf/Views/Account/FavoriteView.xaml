@@ -93,6 +93,15 @@
                                     VerticalAlignment="Center"
                                     Foreground="{DynamicResource MaterialDesignBody}"
                                     Text="{Binding Path=VodRemarks}" />
+                                <TextBlock
+                                    MaxWidth="200"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Foreground="{DynamicResource MaterialDesignBody}">
+                                    <Run Text="来源：【" />
+                                    <Run Text="{Binding Path=VodSourceTitle}" />
+                                    <Run Text="】" />
+                                </TextBlock>
                             </StackPanel>
 
 

@@ -73,7 +73,7 @@ public class PlayerListViewModel(IAppService appService, IMapper mapper, IEventA
                     Videos = [.. PlayList];
 
                     //  设置最后观看
-                    var historyViews = appService.GetHistoryViews(Videos[0].SourceID, Videos[0].VodId);
+                    var historyViews = appService.GetHistoryViews(Videos[0].VodSourceID, Videos[0].VodId);
                     VideoItem = HistoryToLastEpisode(PlayList, historyViews);
                 }
             }
@@ -94,7 +94,7 @@ public class PlayerListViewModel(IAppService appService, IMapper mapper, IEventA
         var lastViewModel = historyViews.MaxBy(x => x.ViewTime);
         if (lastViewModel != null)
         {
-            return videos.FirstOrDefault(x => x.SourceID == lastViewModel.SourceID && x.VodId == x.VodId && x.Episode != null && x.Episode.Equals(lastViewModel.Episode)) ?? videos.First();
+            return videos.FirstOrDefault(x => x.VodSourceID == lastViewModel.VodSourceID && x.VodId == x.VodId && x.Episode != null && x.Episode.Equals(lastViewModel.Episode)) ?? videos.First();
         }
         return new();
     }

@@ -24,7 +24,7 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
             {
                 var resault = mapper.Map<VideoModel>(jsonModel.Videos[0]);
                 //  赋来源ID
-                resault.SourceID = req.SourceID;
+                resault.VodSourceID = req.SourceID;
                 return resault;
             }
         }

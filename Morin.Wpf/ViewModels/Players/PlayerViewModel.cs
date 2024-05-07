@@ -184,7 +184,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         {
             MessageQueue.Enqueue(e.Error);
         }
-        var skipTime = appService.GetPlaySkipTime(curVideo.SourceID, curVideo.VodId);
+        var skipTime = appService.GetPlaySkipTime(curVideo.VodSourceID, curVideo.VodId);
         if (skipTime != null)
         {
             SkipTimeSwitch = skipTime.SkipSwitch;
@@ -322,7 +322,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         {
             SkipBeginPosition = SkipBeginPosition,
             SkipEndPosition = SkipEndPosition,
-            SourceID = curVideo.SourceID,
+            SourceID = curVideo.VodSourceID,
             VodId = curVideo.VodId,
             SkipSwitch = SkipTimeSwitch
         };
