@@ -10,7 +10,8 @@
 ![输入图片说明](Morin.Wpf/Resources/Images/ex_03.png)
 ![输入图片说明](Morin.Wpf/Resources/Images/ex_04.png)
 ## 项目地址
-https://github.com/kuangxj/Morin.Wpf
+Github:[https://github.com/kuangxj/Morin.Wpf](https://github.com/kuangxj/Morin.Wpf)
+Gitee:[https://github.com/kuangxj/Morin.Wpf](https://gitee.com/heiwuqi/Morin.Wpf)
 
 ## 项目说明
 魔影（Morin），一款基于WPF开发的在线观看视频、电视平台，目前仅对Windows支持。后续开放Android、iOS平台。 
