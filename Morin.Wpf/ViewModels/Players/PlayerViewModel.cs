@@ -58,6 +58,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             skipBeginPosition = value;
 
             SkipTimeUpdate();
+
             SkipBegin();
         }
     }
@@ -71,7 +72,10 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             skipEndPosition = value;
             SkipTimeUpdate();
 
-            SkipEnd();
+            if (IsSkipEnd())
+            {
+                NavigateNext();
+            }
 
         }
     }
@@ -91,7 +95,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
 
     public void Handle(OnEpisodeChangedMessage message)
     {
-        if (message.Model != null )
+        if (message.Model != null)
         {
             curVideo = message.Model;
 
@@ -190,15 +194,14 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
             if (sender is Player player)
             {
                 //  跳转开关：开的情况
-                if (SkipTimeSwitch && SkipTimeStateDict.TryGetValue(curVideo.Key, out var isSkipTime))
+                //  时间条件：满足
+                //  状态：未跳转
+                if (SkipTimeSwitch && IsSkipEnd() && !SkipTimeStateDict[curVideo.Key])
                 {
-                    if (!isSkipTime)
-                    {
-                        //  满足条件就结尾
-                        SkipEnd();
-                        //  置跳转记录
-                        SkipTimeStateDict[curVideo.Key] = true;
-                    }
+                    //  重置跳转状态
+                    SkipTimeStateDict[curVideo.Key] = true;
+                    //  下一集
+                    NavigateNext();
                 }
             }
         }
@@ -231,7 +234,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
 
         InitializePlayerComponent();
 
-        InitPlayListView();      
+        InitPlayListView();
     }
 
     private void SetFavoriteState(VideoModel model)
@@ -239,7 +242,7 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
         var favorites = appService.GetFavorites();
         if (model != null)
         {
-            IsFavorite = favorites.FirstOrDefault(x => x.VodSourceID == model.VodSourceID 
+            IsFavorite = favorites.FirstOrDefault(x => x.VodSourceID == model.VodSourceID
             && x.VodId == model.VodId) != null;
         }
     }
@@ -325,22 +328,19 @@ public class PlayerViewModel(IEventAggregator eventAggregator,
     }
     private void SkipBegin()
     {
-        //  直接跳转
         var begin = TimeSpan.FromSeconds(SkipBeginPosition).Ticks;
         if (Player.IsPlaying && Player.CurTime < begin)
         {
             Player.CurTime = begin;
         }
     }
-    private void SkipEnd()
+
+    private bool IsSkipEnd()
     {
-        //  直接跳转
         var end = TimeSpan.FromSeconds(SkipEndPosition).Ticks;
-        if (Player.IsPlaying && (Player.Duration - Player.CurTime) <= end)
-        {
-            NavigateNext();
-        }
+        return Player.IsPlaying && (Player.Duration - Player.CurTime) <= end;
     }
+
     public void Dispose()
     {
         if (!Player.IsDisposed)

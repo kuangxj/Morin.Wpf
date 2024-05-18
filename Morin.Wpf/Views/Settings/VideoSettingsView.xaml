@@ -177,7 +177,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <materialDesign:ColorZone Grid.Row="2" Effect="{DynamicResource MaterialDesignShadowDepth5}" Mode="PrimaryMid">
-                    <TextBlock Margin="16" Text="媒体源列表" />
+                    <TextBlock Margin="16" Foreground="{DynamicResource MaterialDesignBody}" Text="媒体源列表" />
                 </materialDesign:ColorZone>
                 <Button
                     Grid.RowSpan="2"

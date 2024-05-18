@@ -122,7 +122,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <materialDesign:ColorZone Grid.Row="2" Effect="{DynamicResource MaterialDesignShadowDepth5}" Mode="PrimaryMid">
-                        <TextBlock Margin="16" Text="电视频道列表" />
+                        <TextBlock Margin="16" Foreground="{DynamicResource MaterialDesignBody}" Text="电视频道列表" />
                     </materialDesign:ColorZone>
                     <Button
                         Grid.RowSpan="2"
@@ -272,7 +272,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <materialDesign:ColorZone Grid.Row="1" Effect="{DynamicResource MaterialDesignShadowDepth5}" Mode="PrimaryMid">
-                        <TextBlock Margin="16" Text="运营商信息" />
+                        <TextBlock Margin="16" Foreground="{DynamicResource MaterialDesignBody}" Text="运营商信息" />
                     </materialDesign:ColorZone>
                     <Button
                         Grid.Row="0"

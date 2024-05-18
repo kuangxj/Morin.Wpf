@@ -55,7 +55,7 @@ public class VideoSettingsViewModel(IAppService appService,  AppSettingsConfig a
         if (e.Parameter != null && e.Parameter.Equals(true))
         {
             var eq = appService.GetMediaSources().FirstOrDefault(x => !string.IsNullOrEmpty(x.Title) && x.Title.Equals(Title));
-            if (eq != null)
+            if (eq == null)
             {
                 //  添加
                 var id = appService.GetMediaSources().Max(x => x.Id);
@@ -74,6 +74,8 @@ public class VideoSettingsViewModel(IAppService appService,  AppSettingsConfig a
                 ParsingUri = null;
                 Title = null;
                 XmlUri = null;
+
+                Search();
 
             }
 

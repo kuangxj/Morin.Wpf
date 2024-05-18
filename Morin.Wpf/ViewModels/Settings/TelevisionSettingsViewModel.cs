@@ -88,10 +88,9 @@ internal class TelevisionSettingsViewModel(IAppService appService) : Screen
     {
         if (e.Parameter != null && e.Parameter.Equals(true))
         {
-            var source = _tVSources?.FirstOrDefault(x => x.GroupTitle != null
-            && x.GroupTitle.Equals(TVSourceGroupTitle));
+            var eq = _tVSources?.FirstOrDefault(x => x.GroupTitle != null && x.GroupTitle.Equals(TVSourceGroupTitle));
 
-            if (source == null)
+            if (eq == null)
             {
                 var model = new TVSourceModel
                 {
@@ -117,7 +116,7 @@ internal class TelevisionSettingsViewModel(IAppService appService) : Screen
                 //  添加
                 var networkCarrier = new TVSourceDetailModel
                 {
-                    Title=TVSourceDetailTitle,
+                    Title = TVSourceDetailTitle,
                     WebAddr = WebAddr,
                     NetworkCarrierType = this.NetworkCarrierType
                 };
@@ -136,7 +135,7 @@ internal class TelevisionSettingsViewModel(IAppService appService) : Screen
     {
         TVSourceDetails.Remove(networkCarrier);
         //  更新
-        if (TVSourceItem!=null)
+        if (TVSourceItem != null)
         {
             TVSourceItem.TVSourceDetails = TVSourceDetails;
             appService.TVSourceAddOrUpdate(TVSourceItem);
