@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FlyleafLib.Controls.WPF" Version="1.3.9" />
-    <PackageReference Include="MaterialDesignThemes" Version="5.0.1-ci615" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.0.1-ci633" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0-preview.3.24172.9" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0-preview.3.24172.9" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0-preview.3.24172.9" />
