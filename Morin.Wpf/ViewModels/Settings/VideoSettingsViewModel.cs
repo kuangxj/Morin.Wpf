@@ -59,8 +59,9 @@ public class VideoSettingsViewModel(IAppService appService,  AppSettingsConfig a
             {
                 //  添加
                 var id = appService.GetMediaSources().Max(x => x.Id);
-                var model = new MediaSourceModel(id++)
+                var model = new MediaSourceModel
                 {
+                    Id = id+1,
                     JsonUri = JsonUri,
                     ParsingUri = ParsingUri,
                     Title = Title,

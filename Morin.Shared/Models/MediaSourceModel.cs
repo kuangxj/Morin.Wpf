@@ -2,10 +2,6 @@
 
 public class MediaSourceModel : Model
 {
-    public MediaSourceModel(int id)
-    {
-        Id = id;
-    }
     public string? Title { get; set; }
     public string? JsonUri { get; set; }
     public string? XmlUri { get; set; }

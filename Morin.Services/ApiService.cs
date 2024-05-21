@@ -67,10 +67,10 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
 
             if (baseMediaSource == null) return "";
 
-            var vodApiQueryString = $"?ac={req.AcName}";            
+            var vodApiQueryString = $"?ac={req.AcName}";
 
             //  优先Json
-            var baseUri = baseMediaSource.JsonUri ?? baseMediaSource.XmlUri;
+            var baseUri = !string.IsNullOrEmpty(baseMediaSource.JsonUri) ? baseMediaSource.JsonUri : baseMediaSource.XmlUri;
 
             var subUri = new Uri(baseUri);
 
@@ -100,7 +100,7 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
             if (subUri.Segments.Length > 2)
             {
                 foreach (var item in subUri.Segments)
-                {                   
+                {
                     vodApiPreString += $"{item}";
                     if (item.Contains("vod", StringComparison.CurrentCultureIgnoreCase)) break;
                 }
