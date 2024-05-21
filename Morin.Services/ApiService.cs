@@ -55,7 +55,6 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
     /// <para>h=几小时内的数据</para>
     /// </summary>
     /// <param name="req"></param>
-
     /// <returns></returns>
     private string ToUri(Parameter req)
     {
@@ -68,7 +67,7 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
 
             if (baseMediaSource == null) return "";
 
-            var apiString = $"api.php/provide/vod/?ac={req.AcName}";
+            var vodApiString = $"/vod/?ac={req.AcName}";
 
             //  优先Json
             var baseUri = baseMediaSource.JsonUri ?? baseMediaSource.XmlUri;
@@ -97,10 +96,12 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
             {
                 para += $"&pg={req.PageIndex}";
             }
+            if (subUri.Segments.Length > 2)
+            {
+                var uriString = $"{subUri.Scheme}://{subUri.Host}/{subUri.Segments[1]}{subUri.Segments[2]}{vodApiString}{para}";
 
-            var uriString = $"{subUri.Scheme}://{subUri.Host}/{apiString}{para}";
-
-            return uriString;
+                return uriString;
+            }
         }
         return "";
     }
