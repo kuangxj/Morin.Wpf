@@ -5,7 +5,15 @@ public class JsonProvider
 {
     public static T? FromContentToObject<T>(string jsonContent)
     {
-        return JsonConvert.DeserializeObject<T>(jsonContent);
+        try
+        {
+            return JsonConvert.DeserializeObject<T>(jsonContent);
+        }
+        catch 
+        {
+           return default;
+        }
+     
     }
     public static T? ToObject<T>(string jsonPath)
     {
@@ -14,7 +22,7 @@ public class JsonProvider
             if (File.Exists(jsonPath))
             {
                 var jsonContent = File.ReadAllText(jsonPath);
-                return JsonConvert.DeserializeObject<T>(jsonContent);
+                return FromContentToObject<T?>(jsonContent);
             }
         }
         return default;
@@ -26,7 +34,7 @@ public class JsonProvider
             if (File.Exists(jsonPath))
             {
                 var jsonContent = File.ReadAllText(jsonPath);
-                return JsonConvert.DeserializeObject<T>(jsonContent);
+                return FromContentToObject<T?>(jsonContent);
             }
         }
         return default;
@@ -48,7 +56,7 @@ public class JsonProvider
         if (!string.IsNullOrEmpty(path) && list != null)
         {
             var directoryName = Path.GetDirectoryName(path);
-            if (!Directory.Exists(directoryName))
+            if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
             {
                 Directory.CreateDirectory(directoryName);
             }
@@ -60,7 +68,7 @@ public class JsonProvider
         if (!string.IsNullOrEmpty(path) && t != null)
         {
             var directoryName = Path.GetDirectoryName(path);
-            if (!Directory.Exists(directoryName))
+            if (!string.IsNullOrEmpty(directoryName)&&!Directory.Exists(directoryName) )
             {
                 Directory.CreateDirectory(directoryName);
             }
