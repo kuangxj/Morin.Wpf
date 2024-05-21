@@ -67,7 +67,7 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
 
             if (baseMediaSource == null) return "";
 
-            var vodApiString = $"/vod/?ac={req.AcName}";
+            var vodApiQueryString = $"?ac={req.AcName}";            
 
             //  优先Json
             var baseUri = baseMediaSource.JsonUri ?? baseMediaSource.XmlUri;
@@ -96,9 +96,15 @@ public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
             {
                 para += $"&pg={req.PageIndex}";
             }
+            var vodApiPreString = "";
             if (subUri.Segments.Length > 2)
             {
-                var uriString = $"{subUri.Scheme}://{subUri.Host}/{subUri.Segments[1]}{subUri.Segments[2]}{vodApiString}{para}";
+                foreach (var item in subUri.Segments)
+                {                   
+                    vodApiPreString += $"{item}";
+                    if (item.Contains("vod", StringComparison.CurrentCultureIgnoreCase)) break;
+                }
+                var uriString = $"{subUri.Scheme}://{subUri.Host}{vodApiPreString}{vodApiQueryString}{para}";
 
                 return uriString;
             }

@@ -9,7 +9,7 @@ namespace Morin.Shared.Common;
 
 public class HttpsProvider
 {
-    private static readonly HttpClientHandler httpClientHandler = new HttpClientHandler
+    private static readonly HttpClientHandler httpClientHandler = new()
     {
         ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true  //忽略掉证书异常
     };
