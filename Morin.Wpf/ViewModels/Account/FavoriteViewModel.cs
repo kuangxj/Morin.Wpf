@@ -48,7 +48,7 @@ internal class FavoriteViewModel(IContainer container,
         FavoriteEnumerable = appService?.GetFavorites();
         if (FavoriteEnumerable != null)
         {
-            //  
+            //  赋值来源名称
             foreach (var item in FavoriteEnumerable)
             {
                 if (string.IsNullOrEmpty(item.VodSourceTitle))
@@ -57,6 +57,8 @@ internal class FavoriteViewModel(IContainer container,
                     item.VodSourceTitle = source?.Title;
                 }
             }
+            //  按观看时间倒序排列
+            FavoriteEnumerable = FavoriteEnumerable.OrderByDescending(x => x.ViewTime);
             Total = FavoriteEnumerable.Count();
         }
         PageIndexChangedAsync(1);

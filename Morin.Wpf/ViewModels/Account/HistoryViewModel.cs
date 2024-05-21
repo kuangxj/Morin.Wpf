@@ -49,7 +49,7 @@ internal class HistoryViewModel(IContainer container,
         HistoryViewEnumerable = appService?.GetHistoryViews();
         if (HistoryViewEnumerable != null)
         {
-            //  
+            //  赋值来源名称
             foreach (var item in HistoryViewEnumerable)
             {
                 if (string.IsNullOrEmpty(item.VodSourceTitle))
@@ -58,6 +58,8 @@ internal class HistoryViewModel(IContainer container,
                     item.VodSourceTitle = source?.Title;
                 }
             }
+            //  按观看时间倒序排列
+            HistoryViewEnumerable= HistoryViewEnumerable.OrderByDescending(x=>x.ViewTime);
 
             Total = HistoryViewEnumerable.Count();
         }

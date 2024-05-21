@@ -7,7 +7,6 @@ using Morin.Storages;
 
 namespace Morin.Services;
 
-
 public class ApiService(IMapper mapper, IAppStorage appStorage) : IApiService
 {
     private readonly IMapper mapper = mapper;

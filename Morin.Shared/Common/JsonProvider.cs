@@ -12,8 +12,7 @@ public class JsonProvider
         catch 
         {
            return default;
-        }
-     
+        }     
     }
     public static T? ToObject<T>(string jsonPath)
     {
