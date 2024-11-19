@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace Morin.Wpf.ViewModels.Settings;
 
-public class VideoSettingsViewModel(IAppService appService,  AppSettingsConfig appSettingsConfig) : Screen
+public class VideoSettingsViewModel(IAppService appService, AppSettingsConfig appSettingsConfig) : Screen
 {
 
     private MediaSourceModel mediaSourceModelItem;
@@ -52,36 +52,57 @@ public class VideoSettingsViewModel(IAppService appService,  AppSettingsConfig a
     }
     public void OnDialogClosing(object sender, DialogClosingEventArgs e)
     {
-        if (e.Parameter != null && e.Parameter.Equals(true))
+        if (e.Parameter == null) return;
+        if (e.Parameter.Equals(false)) return;
+        if (string.IsNullOrEmpty(Title)) return;
+
+        //  构建实体
+        var model = new MediaSourceModel
         {
-            var eq = appService.GetMediaSources().FirstOrDefault(x => !string.IsNullOrEmpty(x.Title) && x.Title.Equals(Title));
-            if (eq == null)
+            JsonUri = JsonUri,
+            ParsingUri = ParsingUri,
+            Title = Title,
+            XmlUri = XmlUri
+        };
+
+        var videoSources = appService.GetMediaSources();
+        //  1、数据库中无数据，直接增加；
+        //  2、数据库有数据就找相同名称的，有就更新，没有就新增；
+        if (videoSources == null || videoSources.Count() == 0)
+        {
+            model.Id = 1;
+            MediaSources.Add(model);
+        }
+        else
+        {
+            var videoSource = videoSources.FirstOrDefault(x => x.Title.Equals(Title));
+            if (videoSource != null)
             {
-                //  添加
-                var id = appService.GetMediaSources().Max(x => x.Id);
-                var model = new MediaSourceModel
-                {
-                    Id = id+1,
-                    JsonUri = JsonUri,
-                    ParsingUri = ParsingUri,
-                    Title = Title,
-                    XmlUri = XmlUri
-                };
-                MediaSources.Add(model);
+                //  此处不更新Id
+                videoSource.Title = model.Title;
+                videoSource.JsonUri = model.JsonUri;
+                videoSource.XmlUri = model.XmlUri;
+                videoSource.ParsingUri = model.ParsingUri;
                 //  更新
+                appService.MediaSourcesAddOrUpdate(videoSource);
+            }
+            else
+            {
+                //  新增
+                var maxId = videoSources.Max(x => x.Id);
+                model.Id = maxId + 1;
                 appService.MediaSourcesAddOrUpdate(model);
-
-                JsonUri = null;
-                ParsingUri = null;
-                Title = null;
-                XmlUri = null;
-
-                Search();
-
             }
 
-
         }
+
+        JsonUri = null;
+        ParsingUri = null;
+        Title = null;
+        XmlUri = null;
+
+        //  触发查询任务
+        Search();
 
     }
 

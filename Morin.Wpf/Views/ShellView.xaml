@@ -26,10 +26,6 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CornerRadius="2" GlassFrameThickness="1" />
     </WindowChrome.WindowChrome>
-    <Window.TaskbarItemInfo>
-        <TaskbarItemInfo ProgressState="Normal" ProgressValue="{Binding Path=PlaybackProgress}" />
-    </Window.TaskbarItemInfo>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -50,7 +46,10 @@
                     Text="{Binding Path=Title}" />
 
                 <!--  导航  -->
-                <ListBox Margin="5,0" ItemsSource="{Binding Path=Menus}" SelectedItem="{Binding Path=MenuItem}">
+                <ListBox
+                    Margin="5,0"
+                    ItemsSource="{Binding Path=Menus}"
+                    SelectedItem="{Binding Path=MenuItem}">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" />
@@ -60,7 +59,10 @@
                         <DataTemplate DataType="models:MenuBarModel">
                             <Border Margin="5,0" Background="Transparent">
                                 <StackPanel>
-                                    <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center" Kind="{Binding Path=Icon}" />
+                                    <materialDesign:PackIcon
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Kind="{Binding Path=Icon}" />
                                     <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
                                 </StackPanel>
                             </Border>
@@ -91,7 +93,10 @@
                             GotFocus="{s:Action SearchGotFocus}"
                             Text="{Binding Path=KeyWord, Mode=TwoWay}">
                             <TextBox.InputBindings>
-                                <KeyBinding Key="Enter" Command="{s:Action VideoSearch}" CommandParameter="{Binding ElementName=TextBoxSearch, Path=Text}" />
+                                <KeyBinding
+                                    Key="Enter"
+                                    Command="{s:Action VideoSearch}"
+                                    CommandParameter="{Binding ElementName=TextBoxSearch, Path=Text}" />
                             </TextBox.InputBindings>
                         </TextBox>
                         <Button
@@ -111,7 +116,10 @@
                             PlacementTarget="{Binding ElementName=ColorZoneSearch}"
                             PopupAnimation="Slide"
                             StaysOpen="True">
-                            <Border Background="{DynamicResource MaterialDesignPaper}" BorderBrush="{StaticResource LinearGradientBrush1}" BorderThickness="1">
+                            <Border
+                                Background="{DynamicResource MaterialDesignPaper}"
+                                BorderBrush="{StaticResource LinearGradientBrush1}"
+                                BorderThickness="1">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
@@ -127,7 +135,10 @@
                                         </ListBox.ItemsPanel>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Padding="1" BorderBrush="{DynamicResource LinearGradientBrush2}" BorderThickness="1">
+                                                <Border
+                                                    Padding="1"
+                                                    BorderBrush="{DynamicResource LinearGradientBrush2}"
+                                                    BorderThickness="1">
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock VerticalAlignment="Center" Text="{Binding Path=KeyWord}" />
                                                         <Button
@@ -144,7 +155,10 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                     <Separator Grid.Row="1" Style="{StaticResource MaterialDesignSeparator}" />
-                                    <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        HorizontalAlignment="Right"
+                                        Orientation="Horizontal">
                                         <Button
                                             Command="{s:Action HistorySearchClearn}"
                                             Content="{materialDesign:PackIcon Kind=Broom}"

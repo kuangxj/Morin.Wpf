@@ -52,11 +52,7 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
 
     public BindableCollection<HistorySearchModel> HistorySearchs { get; set; }
 
-    public WindowState WindowState { get; set; }
-
-    public TaskbarItemProgressState PlaybackProgressState { get; set; }
-
-    public double PlaybackProgress { get; set; }
+    public WindowState WindowState { get; set; }     
 
     private bool isDarkTheme = true;
     public bool IsDarkTheme
@@ -88,10 +84,7 @@ public class ShellViewModel(IConfiguration configuration, IContainer container,
     {
         base.OnInitialActivate();
 
-        eventAggregator.Subscribe(this);
-
-        PlaybackProgressState = TaskbarItemProgressState.Normal;
-        PlaybackProgress = 100;
+        eventAggregator.Subscribe(this);       
 
         LoadDefaultData();
 

@@ -52,7 +52,10 @@
         </StackPanel>
 
         <!--  一级导航  -->
-        <StackPanel Grid.Row="1" Margin="10,0" Orientation="Horizontal">
+        <StackPanel
+            Grid.Row="1"
+            Margin="10,0"
+            Orientation="Horizontal">
             <TextBlock VerticalAlignment="Center" Text="分类：" />
             <ListBox
                 Margin="10,0"
@@ -73,7 +76,10 @@
         </StackPanel>
 
         <!--  二级导航  -->
-        <StackPanel Grid.Row="2" Margin="10,0" Orientation="Horizontal">
+        <StackPanel
+            Grid.Row="2"
+            Margin="10,0"
+            Orientation="Horizontal">
             <TextBlock VerticalAlignment="Center" Text="细分：" />
             <ListBox
                 Margin="10,0"
@@ -119,39 +125,29 @@
                 </ItemsControl.Template>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="5" Rows="4" />
+                        <UniformGrid Columns="7" Rows="3" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type model:VideoModel}">
-                        <Border Padding="1" Background="Transparent" CornerRadius="5">
+                        <Border
+                            Padding="1"
+                            Background="Transparent"
+                            CornerRadius="5">
                             <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition Height="auto" />
-                                </Grid.RowDefinitions>
 
-                                <Border Grid.RowSpan="2" CornerRadius="5">
-                                    <Border.Resources>
-                                        <ImageBrush x:Key="VideoImage" ImageSource="{Binding Path=VodPic}" Stretch="Fill" />
-                                    </Border.Resources>
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Setter Property="Background" Value="{StaticResource VideoImage}" />
-                                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                                        </Style>
-                                    </Border.Style>
+                                <Image Stretch="Fill">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="{Binding Path=VodPic}" />
+                                    </Image.Source>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="PreviewMouseDown">
                                             <i:InvokeCommandAction Command="{s:Action PlayAsync}" CommandParameter="{Binding Path=.}" />
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
-                                </Border>
 
-                                <StackPanel Grid.Row="1" Margin="0,5">
-                                    <StackPanel.Background>
-                                        <SolidColorBrush Opacity="0.16" Color="{StaticResource winBorderColor7}" />
-                                    </StackPanel.Background>
+                                </Image>
+                                <StackPanel VerticalAlignment="Bottom">
                                     <TextBlock
                                         MaxWidth="200"
                                         Margin="0,2"
@@ -166,8 +162,6 @@
                                         Foreground="{DynamicResource MaterialDesignBody}"
                                         Text="{Binding Path=VodRemarks}" />
                                 </StackPanel>
-
-
                             </Grid>
                             <Border.Style>
                                 <Style TargetType="Border">
